@@ -1,0 +1,146 @@
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>티모(T-MO) - 마이페이지</title>
+    <style>
+        * { box-sizing: border-box; }
+        body { font-family: 'Malgun Gothic', sans-serif; margin: 0; background-color: #f0f2f5; min-width: 950px; min-height: 100vh; display: flex; flex-direction: column; }
+
+        /* 기존 헤더 스타일 유지 */
+        header { background-color: #2c3e50; color: white; padding: 20px; display: flex; justify-content: space-between; align-items: center; }
+        .logo { font-size: 1.2rem; }
+        .nav-links { display: flex; align-items: center; gap: 20px; }
+        .nav-links a { color: white; text-decoration: none; font-weight: bold; padding: 10px 20px; border-radius: 8px; transition: 0.3s; }
+        .nav-links a.active { background-color: #ff9800; color: white; }
+        .alarm { cursor: pointer; }
+
+        /* 마이페이지 메인 컨테이너 */
+        #mypage-container { width: 850px; margin: 40px auto; display: flex; flex-direction: column; gap: 25px; }
+
+        /* 프로필 카드 섹션 */
+        .profile-card { background: white; padding: 30px; border-radius: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.08); display: flex; align-items: center; justify-content: space-between; }
+        .profile-info { display: flex; align-items: center; gap: 25px; }
+        .profile-img { width: 80px; height: 80px; background-color: #e0e0e0; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 0.9rem; color: #666; font-weight: bold; }
+        .user-detail h2 { margin: 0 0 5px 0; color: #2c3e50; }
+        .user-detail p { margin: 0 0 5px 0; color: #7f8c8d; font-size: 0.95rem; }
+        .user-detail small { color: #bdc3c7; }
+        .btn-edit { background: none; border: 1px solid #ccc; padding: 8px 16px; border-radius: 6px; cursor: pointer; font-weight: bold; transition: 0.2s; }
+        .btn-edit:hover { background-color: #f8f9fa; }
+
+        /* 활동 및 메뉴 섹션 */
+        .section-card { background: white; padding: 30px; border-radius: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.08); }
+        .section-card h3 { margin-top: 0; margin-bottom: 20px; color: #2c3e50; border-left: 4px solid #ff9800; padding-left: 10px; }
+
+        /* 내 활동 내역 탭 스타일 */
+        .activity-tabs { display: flex; gap: 20px; border-bottom: 2px solid #eee; margin-bottom: 20px; padding-bottom: 10px; }
+        .tab-item { font-weight: bold; color: #7f8c8d; cursor: pointer; text-decoration: none; font-size: 1.05rem; }
+        .tab-item.active { color: #ff9800; border-bottom: 2px solid #ff9800; padding-bottom: 10px; margin-bottom: -12px; }
+
+        /* 데이터가 없을 때의 기본(Empty) 상태 스타일 디테일 수정 */
+        .empty-state { text-align: center; padding: 35px 0; color: #95a5a6; font-size: 0.95rem; display: flex; flex-direction: column; align-items: center; gap: 12px; }
+        
+        /* 나중에 연결할 바로가기 버튼 스타일 추가 */
+        .btn-shortcut { background-color: #f8f9fa; border: 1px solid #e0e0e0; color: #2c3e50; padding: 8px 16px; border-radius: 20px; font-size: 0.85rem; font-weight: bold; cursor: pointer; transition: 0.2s; text-decoration: none; }
+        .btn-shortcut:hover { background-color: #ff9800; border-color: #ff9800; color: white; box-shadow: 0 2px 8px rgba(255,152,0,0.3); }
+
+        /* 계정 관리 목록 스타일 */
+        .menu-list { list-style: none; padding: 0; margin: 0; }
+        .menu-list li { border-bottom: 1px solid #eee; }
+        .menu-list li:last-child { border-bottom: none; }
+        .menu-list a { display: block; padding: 15px 0; color: #333; text-decoration: none; transition: 0.2s; }
+        .menu-list a:hover { color: #ff9800; }
+
+        /* 회원 탈퇴 영역 */
+        .resign-area { text-align: right; margin-top: 10px; padding: 0 10px; }
+        .resign-area a { color: #95a5a6; font-size: 0.85rem; text-decoration: none; }
+        .resign-area a:hover { text-decoration: underline; color: #e74c3c; }
+    </style>
+</head>
+<body>
+
+    <!-- 헤더 (티모 디자인 유지) -->
+    <header>
+        <div class="logo"><strong>티모(T-MO)</strong></div>
+        <nav class="nav-links">
+            <a href="#" onclick="selectMenu(this, '게시글')">게시글</a>
+            <a href="#" onclick="selectMenu(this, '지도')">지도</a>
+            <a href="#" onclick="selectMenu(this, '홈')">홈</a>
+            <a href="#" onclick="selectMenu(this, '동아리')">동아리</a>
+            <a href="#" onclick="selectMenu(this, 'MY')" class="active">MY</a>
+        </nav>
+        <div class="alarm">🔔 알림(0)</div>
+    </header>
+
+    <main>
+        <div id="mypage-container">
+            
+            <!-- 1. 프로필 카드 -->
+            <div class="profile-card">
+                <div class="profile-info">
+                    <div class="profile-img">PHOTO</div>
+                    <div class="user-detail">
+                        <h2>홍길동 님</h2>
+                        <p>hong@example.com</p>
+                        <small>가입일: 2026-07-13</small>
+                    </div>
+                </div>
+                <button type="button" class="btn-edit" onclick="alert('프로필 수정 기능 준비 중입니다.')">프로필 수정</button>
+            </div>
+
+            <!-- 2. 나의 활동 섹션 (클릭 이벤트 디테일 추가) -->
+            <div class="section-card">
+                <div class="activity-tabs">
+                    <span class="tab-item active">내가 게시한 소모임</span>
+                </div>
+                <!-- 소모임 없을 때 -->
+                <div class="empty-state">
+                    <span>게시한 소모임이 없습니다. 새로운 모임을 만들어보세요!</span>
+                    <!-- 추후 이동할 수 있도록 임시 onclick 링크 부여 -->
+                    <a href="#" class="btn-shortcut" onclick="goMenu('소모임 생성 페이지로 이동합니다.')">소모임 만들기 ➔</a>
+                </div>
+
+                <div class="activity-tabs" style="margin-top: 30px;">
+                    <span class="tab-item active">가입한 동아리</span>
+                </div>
+                <!-- 클럽 없을 때 -->
+                <div class="empty-state">
+                    <span>가입한 동아리가 없습니다. 취향에 맞는 클럽을 찾아보세요!</span>
+                    <!-- 추후 이동할 수 있도록 임시 onclick 링크 부여 -->
+                    <a href="#" class="btn-shortcut" onclick="goMenu('동아리 탐색 및 가입 페이지로 이동합니다.')">동아리 가입 및 신청하러 가기 ➔</a>
+                </div>
+            </div>
+
+            <!-- 3. 계정 및 설정 섹션 -->
+            <div class="section-card">
+                <h3>계정 설정</h3>
+                <ul class="menu-list">
+                    <li><a href="#" onclick="alert('비밀번호 변경 기능 준비 중입니다.')">비밀번호 변경</a></li>
+                    <li><a href="#" onclick="alert('알림 설정 기능 준비 중입니다.')">알림 설정</a></li>
+                    <li><a href="#" onclick="alert('약관 페이지로 이동합니다.')">이용약관 및 개인정보 처리방침</a></li>
+                    <li><a href="#" onclick="alert('로그아웃 되었습니다.')">로그아웃</a></li>
+                </ul>
+            </div>
+
+            <!-- 4. 회원 탈퇴 -->
+            <div class="resign-area">
+                <a href="#" onclick="alert('회원 탈퇴 페이지로 이동합니다.')">회원 탈퇴를 원하시나요?</a>
+            </div>
+
+        </div>
+    </main>
+
+    <script>
+        // 메뉴 탭 활성화 함수 (기존 로직 유지)
+        function selectMenu(element, title) {
+            document.querySelectorAll('.nav-links a').forEach(a => a.classList.remove('active'));
+            element.classList.add('active');
+        }
+
+        // 나중에 실제 URL이나 라우터 함수로 바꿀 수 있는 임시 클릭 함수
+        function goMenu(message) {
+            alert(message);
+            // window.location.href = '원하는페이지주소.html'; <-- 나중에 여기에 주소를 넣으면 됩니다.
+        }
+    </script>
+</body>
+</html>

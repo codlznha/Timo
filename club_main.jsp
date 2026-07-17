@@ -1,0 +1,216 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
+    <!DOCTYPE html>
+    <html lang="ko">
+
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>티모(Timo) - 공식 동아리</title>
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+        <link rel="stylesheet" href="css/common.css">
+        <link rel="stylesheet" href="css/layout.css">
+        <link rel="stylesheet" href="css/components.css">
+    </head>
+
+    <body>
+
+        <!-- 사이드바 (아이콘 지우고 프로필 추가) -->
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-logo">티모(Timo)</div>
+            <div class="sidebar-profile">
+                <div class="profile-img"><i class="fa-solid fa-user"></i></div>
+                <div class="profile-name">이한국 님</div>
+            </div>
+            <nav class="sidebar-menu">
+                <div class="menu-title">MAIN MENU</div>
+                <a href="index.jsp" class="menu-item"><i class="fa-solid fa-house"></i> 홈</a>
+                <a href="club_main.jsp" class="menu-item active"><i class="fa-solid fa-shield-halved"></i> 공식 동아리</a>
+                <a href="meeting_list.jsp" class="menu-item"><i class="fa-solid fa-user-group"></i> 자율 소모임</a>
+                <a href="map.jsp" class="menu-item"><i class="fa-solid fa-map-location-dot"></i> 지도</a>
+                <a href="club_board.jsp" class="menu-item"><i class="fa-solid fa-clipboard-list"></i> 게시판</a>
+                <a href="mypage.jsp" class="menu-item"><i class="fa-solid fa-user"></i> MY</a>
+            </nav>
+        </aside>
+
+        <!-- 메인 컨텐츠 영역 -->
+        <div class="main-wrapper" id="mainWrapper">
+
+            <!-- 탑 헤더 (토글 버튼과 검색창) -->
+            <header class="top-header">
+                <div class="header-left">
+                    <button class="btn-toggle" onclick="toggleSidebar()"><i class="fa-solid fa-bars"></i></button>
+                    <div class="header-search">
+                        <i class="fa-solid fa-magnifying-glass"></i>
+                        <input type="text" placeholder="통합 검색...">
+                    </div>
+                </div>
+                <div class="header-icons">
+                    <i class="fa-regular fa-bell"></i>
+                </div>
+            </header>
+
+            <!-- 타이틀 영역 -->
+            <div class="page-header">
+                <h1>공식 동아리</h1>
+                <p>한국공학대학교 인증 공식 동아리 목록입니다.</p>
+            </div>
+
+            <div class="content-container">
+
+                <!-- 내가 가입한 동아리 -->
+                <div class="section-card">
+                    <div class="section-title"><i class="fa-solid fa-star" style="color: #f1c40f;"></i> 내가 가입한 동아리</div>
+                    <div class="my-clubs-wrap">
+                        <div class="my-club" onclick="location.href='club_detail.jsp?id=1'">
+                            <div class="club-logo"><i class="fa-solid fa-code"></i></div>
+                            <div class="club-info">
+                                <h4>웹개발 Timo</h4>
+                                <p>85명 활동중</p>
+                            </div>
+                        </div>
+                        <div class="my-club" onclick="location.href='club_detail.jsp?id=2'">
+                            <div class="club-logo"><i class="fa-solid fa-robot"></i></div>
+                            <div class="club-info">
+                                <h4>ROBOTIS</h4>
+                                <p>42명 활동중</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 전체 동아리 및 필터 -->
+                <div class="section-card">
+                    <div class="section-title"><i class="fa-solid fa-list" style="color: var(--primary-blue);"></i> 전체
+                        공식 동아리</div>
+
+                    <div class="toolbar-wrapper">
+                        <div class="tags">
+                            <div class="tag active" data-tag="all">전체</div>
+                            <div class="tag" data-tag="IT">IT/개발</div>
+                            <div class="tag" data-tag="운동">스포츠</div>
+                            <div class="tag" data-tag="예술">문화/예술</div>
+                            <div class="tag" data-tag="봉사">봉사</div>
+                        </div>
+
+                        <div class="controls">
+                            <div class="search-box-local">
+                                <i class="fa-solid fa-magnifying-glass"></i>
+                                <input id="search" type="text" placeholder="동아리 검색...">
+                            </div>
+                            <select id="sort">
+                                <option value="asc">가나다순</option>
+                                <option value="desc">역순</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="club-grid" id="clubGrid">
+
+                        <div class="club-card" data-name="웹개발연합회" data-tag="IT"
+                            onclick="location.href='club_detail.jsp?id=1'">
+                            <div class="card-header">
+                                <div class="club-logo"><i class="fa-solid fa-code"></i></div>
+                                <span class="badge">IT/개발</span>
+                            </div>
+                            <div class="club-name">웹개발연합회</div>
+                            <div class="club-desc">프론트엔드부터 백엔드까지, 웹/앱 프로젝트를 함께 기획하고 개발합니다.</div>
+                            <div class="card-footer">
+                                <span class="member-count"><i class="fa-solid fa-user"></i> 85명</span>
+                            </div>
+                        </div>
+
+                        <div class="club-card" data-name="로보티즈" data-tag="IT"
+                            onclick="location.href='club_detail.jsp?id=2'">
+                            <div class="card-header">
+                                <div class="club-logo"><i class="fa-solid fa-robot"></i></div>
+                                <span class="badge">IT/개발</span>
+                            </div>
+                            <div class="club-name">ROBOTIS</div>
+                            <div class="club-desc">자율주행 및 임베디드 로봇 제어 시스템 연구 동아리입니다.</div>
+                            <div class="card-footer">
+                                <span class="member-count"><i class="fa-solid fa-user"></i> 42명</span>
+                            </div>
+                        </div>
+
+                        <div class="club-card" data-name="바스켓볼 크루" data-tag="운동"
+                            onclick="location.href='club_detail.jsp?id=3'">
+                            <div class="card-header">
+                                <div class="club-logo"><i class="fa-solid fa-basketball"></i></div>
+                                <span class="badge">스포츠</span>
+                            </div>
+                            <div class="club-name">바스켓볼 크루</div>
+                            <div class="club-desc">매주 교내 체육관에서 농구 활동 및 타 대학과의 정기 교류전을 진행합니다.</div>
+                            <div class="card-footer">
+                                <span class="member-count"><i class="fa-solid fa-user"></i> 43명</span>
+                            </div>
+                        </div>
+
+                        <div class="club-card" data-name="포토그래피" data-tag="예술"
+                            onclick="location.href='club_detail.jsp?id=4'">
+                            <div class="card-header">
+                                <div class="club-logo"><i class="fa-solid fa-camera-retro"></i></div>
+                                <span class="badge">문화/예술</span>
+                            </div>
+                            <div class="club-name">포토그래피</div>
+                            <div class="club-desc">주말 정기 출사와 필름 카메라 인화 스터디, 연말 사진전을 엽니다.</div>
+                            <div class="card-footer">
+                                <span class="member-count"><i class="fa-solid fa-user"></i> 27명</span>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <script>
+            // 사이드바 토글 함수 (메인 화면 로직과 동일)
+            function toggleSidebar() {
+                const sidebar = document.getElementById('sidebar');
+                const mainWrapper = document.getElementById('mainWrapper');
+                if (window.innerWidth <= 768) {
+                    sidebar.classList.toggle('active-mobile');
+                } else {
+                    sidebar.classList.toggle('collapsed');
+                    mainWrapper.classList.toggle('expanded');
+                }
+            }
+
+            // 검색 및 필터 로직
+            const search = document.getElementById("search");
+            const sort = document.getElementById("sort");
+            const grid = document.getElementById("clubGrid");
+            const tags = document.querySelectorAll(".tag");
+            let current = "all";
+
+            function render() {
+                let cards = [...grid.children];
+                cards.forEach(c => {
+                    const okName = c.dataset.name.toLowerCase().includes(search.value.toLowerCase());
+                    const okTag = current === "all" || c.dataset.tag === current;
+                    c.style.display = (okName && okTag) ? "flex" : "none";
+                });
+                cards.sort((a, b) => {
+                    return sort.value === "asc" ?
+                        a.dataset.name.localeCompare(b.dataset.name, "ko") :
+                        b.dataset.name.localeCompare(a.dataset.name, "ko");
+                });
+                cards.forEach(c => grid.appendChild(c));
+            }
+
+            search.addEventListener('keyup', render);
+            sort.addEventListener('change', render);
+
+            tags.forEach(t => {
+                t.onclick = () => {
+                    tags.forEach(x => x.classList.remove("active"));
+                    t.classList.add("active");
+                    current = t.dataset.tag;
+                    render();
+                }
+            });
+        </script>
+    </body>
+
+    </html>
