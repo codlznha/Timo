@@ -166,15 +166,6 @@
             font-size: 0.9rem;
         }
 
-        /* --- 메인 콘텐츠 (게시판 탭) --- */
-        .tabs {
-            display: flex;
-            gap: 15px;
-            margin-bottom: 20px;
-            border-bottom: 1px solid var(--border-color);
-            overflow-x: auto;
-            white-space: nowrap;
-        }
 
         .tab-btn {
             background: none;
@@ -391,14 +382,6 @@
         </div>
     </header>
 
-    <nav class="top-nav">
-        <a href="club_main.jsp" class="nav-item active">동아리</a>
-        <a href="meeting_list.jsp" class="nav-item">모임</a>
-        <a href="club_board.jsp" class="nav-item">작성</a>
-        <a href="map.jsp" class="nav-item">지도</a>
-        <a href="club_apply.jsp" class="nav-item">가입</a>
-    </nav>
-
     <div class="container">
         
         <aside class="sidebar">
@@ -476,19 +459,19 @@
                         <div class="member-avatar"><i class="fa-solid fa-user"></i></div>
                         <div class="member-role">회장</div>
                         <div class="member-name">이호성</div>
-                        <div class="member-dept">인공지능소프트웨어학과</div>
+                        <div class="member-dept">소프트웨어학과</div>
                     </div>
                     <div class="member-card executive-card">
                         <div class="member-avatar"><i class="fa-solid fa-user"></i></div>
                         <div class="member-role">부회장</div>
                         <div class="member-name">임채이</div>
-                        <div class="member-dept">인공지능소프트웨어학과</div>
+                        <div class="member-dept">소프트웨어학과</div>
                     </div>
                     <div class="member-card executive-card">
                         <div class="member-avatar"><i class="fa-solid fa-user"></i></div>
                         <div class="member-role">기획부장</div>
                         <div class="member-name">우동훈</div>
-                        <div class="member-dept">인공지능소프트웨어학과</div>
+                        <div class="member-dept">소프트웨어학과</div>
                     </div>
                 </div>
 
