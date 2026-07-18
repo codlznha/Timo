@@ -6,28 +6,162 @@
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>티모(Timo) - 자유 게시판</title>
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-
-        <!-- 공통 CSS (절대 경로) -->
-        <link rel="stylesheet" href="${pageContext.request.contextPath}/css/common.css">
-        <link rel="stylesheet" href="${pageContext.request.contextPath}/css/layout.css">
+        <!-- 아이콘 폰트는 sidebar.jsp에서 자체적으로 불러오므로 여기서는 생략 -->
 
         <style>
-            /* --- 1. 상단 통합 검색창 숨기기 (이 페이지 한정) --- */
-            .header-search {
-                display: none !important;
+            /* --- 공통 및 메인 페이지 전용 CSS Variables (main.jsp와 동일) --- */
+            /* --primary-blue, --white는 sidebar.jsp의 :root에서 이미 제공되므로 여기서는 생략 */
+            :root {
+                --bg-color: #f4f6f9;
+                --text-dark: #333333;
+                --text-gray: #666666;
+                --border-color: #e5e8eb;
+
+                /* 게시판 전용 추가 변수 */
+                --primary-light: #e6f0fa;
+                --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.03);
+                --shadow-lg: 0 5px 15px rgba(0, 0, 0, 0.2);
             }
 
-            /* --- 2. 기본 레이아웃 강제 정렬 (디자인 깨짐 방지 핵심) --- */
+            * {
+                margin: 0;
+                padding: 0;
+                box-sizing: border-box;
+                font-family: 'Pretendard', 'Noto Sans KR', sans-serif;
+            }
+
+            body {
+                background-color: var(--bg-color);
+                display: flex;
+                min-height: 100vh;
+                overflow-x: hidden;
+            }
+
+            /* --- 메인 영역 기본 뼈대 (main.jsp와 동일) --- */
+            /* margin-left는 sidebar.jsp에서 자동으로 제어해줍니다 */
             .main-wrapper {
+                flex-grow: 1;
                 display: flex;
                 flex-direction: column;
                 min-height: 100vh;
                 min-width: 0;
-                /* Flexbox 팽창 버그 해결 (버튼 짤림 방지) */
             }
 
-            /* 상단 글씨 겹침 해결 */
+            /* 상단 헤더 */
+            .top-header {
+                height: 70px;
+                background-color: var(--white);
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                padding: 0 30px;
+                border-bottom: 1px solid var(--border-color);
+                position: sticky;
+                top: 0;
+                z-index: 90;
+            }
+
+            .header-left {
+                display: flex;
+                align-items: center;
+                gap: 20px;
+            }
+
+            .btn-toggle {
+                background: none;
+                border: none;
+                font-size: 1.5rem;
+                color: var(--text-dark);
+                cursor: pointer;
+            }
+
+            .header-search {
+                display: flex;
+                align-items: center;
+                background: var(--bg-color);
+                border-radius: 20px;
+                padding: 8px 15px;
+                width: 300px;
+                transition: 0.3s;
+            }
+
+            .header-search input {
+                border: none;
+                background: transparent;
+                outline: none;
+                margin-left: 10px;
+                width: 100%;
+                font-size: 0.9rem;
+            }
+
+            .header-search button {
+                background: none;
+                border: none;
+                cursor: pointer;
+                color: var(--text-gray);
+            }
+
+            .header-icons {
+                display: flex;
+                align-items: center;
+                gap: 20px;
+                color: var(--text-gray);
+                font-size: 1.2rem;
+                cursor: pointer;
+            }
+
+            /* 1. 상단 통합 검색창 숨기기 (이 페이지 한정) */
+            .header-search {
+                display: none !important;
+            }
+
+            /* 하단 네비게이션 바 (모바일) */
+            .bottom-nav {
+                display: none;
+                position: fixed;
+                bottom: 0;
+                left: 0;
+                right: 0;
+                height: 65px;
+                background: var(--white);
+                justify-content: space-around;
+                align-items: center;
+                border-top: 1px solid var(--border-color);
+                z-index: 100;
+            }
+
+            .bottom-nav .nav-item {
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                justify-content: center;
+                font-size: 0.75rem;
+                color: var(--text-gray);
+                text-decoration: none;
+                width: 20%;
+                gap: 4px;
+            }
+
+            .bottom-nav .nav-item i {
+                font-size: 1.4rem;
+            }
+
+            .bottom-nav .nav-item.active {
+                color: var(--primary-blue);
+            }
+
+            /* 메인영역 반응형 처리 */
+            @media (max-width: 768px) {
+                .main-wrapper {
+                    padding-bottom: 70px;
+                }
+
+                .bottom-nav {
+                    display: flex;
+                }
+            }
+
+            /* --- 게시판 레이아웃 --- */
             .page-header {
                 padding: 30px 30px 0 30px;
                 margin-bottom: -10px;
@@ -42,7 +176,6 @@
             }
 
             /* --- 게시판 전용 스타일 --- */
-
             /* TOP 5 인기글 섹션 */
             .top-posts-section {
                 margin-bottom: 30px;
@@ -595,164 +728,180 @@
 
     <body>
 
-        <!-- 사이드바 -->
-        <%@ include file="/common/sidebar.jsp" %>
+        <!-- 🔥 분리된 사이드바를 여기서 불러옵니다. (main.jsp와 동일) 🔥 -->
+        <%@ include file="common/sidebar.jsp" %>
 
             <div class="main-wrapper" id="mainWrapper">
 
-                <!-- 헤더 -->
-                <%@ include file="/common/header.jsp" %>
+                <!-- 🔥 메인 헤더 영역 직접 포함 (main.jsp와 동일, 불필요한 header.jsp 제거) 🔥 -->
+                <header class="top-header">
+                    <div class="header-left">
+                        <!-- 사이드바 토글 버튼: sidebar.jsp 내의 toggleSidebar() 함수가 실행됩니다. -->
+                        <button class="btn-toggle" onclick="toggleSidebar()"><i class="fa-solid fa-bars"></i></button>
 
-                    <div class="page-header">
-                        <h1>자유 게시판</h1>
-                        <p>동아리원, 학우들과 자유롭게 소통해보세요!</p>
+                        <!-- 해당 검색창은 게시판 화면(CSS)에서 숨김처리 됩니다. -->
+                        <form class="header-search">
+                            <i class="fa-solid fa-magnifying-glass"></i>
+                            <input type="text" id="searchInput" placeholder="동아리명 검색...">
+                        </form>
                     </div>
+                    <div class="header-icons">
+                        <i class="fa-regular fa-bell"></i>
+                    </div>
+                </header>
 
-                    <div class="content-container">
+                <div class="page-header">
+                    <h1>자유 게시판</h1>
+                    <p>동아리원, 학우들과 자유롭게 소통해보세요!</p>
+                </div>
 
-                        <!-- 1. 주간 인기글 TOP 5 -->
-                        <section class="top-posts-section">
-                            <div class="section-title"><i class="fa-solid fa-fire" style="color: #ff8c00;"></i> 주간 인기글
-                                TOP 5</div>
-                            <div class="top-grid">
-                                <!-- TOP 1 -->
-                                <div class="top-card"
-                                    onclick="openViewModal('UiPath Element 오류 해결법 아시는 분?', 'RPA 실습 중에 selector를 못 잡는데 어떻게 해야 하나요?', '익명', 45, 12)">
-                                    <span class="top-badge">TOP 1</span>
-                                    <div class="top-title">UiPath Element 오류 해결법 아시는 분?</div>
-                                    <div class="top-meta">
-                                        <span>익명</span>
-                                        <span style="color:#d32f2f;"><i class="fa-solid fa-heart"></i> 45</span>
-                                    </div>
-                                </div>
-                                <!-- TOP 2 -->
-                                <div class="top-card"
-                                    onclick="openViewModal('기숙사 공용 냉장고 반찬 관련 질문', '내용 생략...', '이한국', 38, 5, true)">
-                                    <span class="top-badge">TOP 2</span>
-                                    <div class="top-title">기숙사 공용 냉장고 반찬 관련 질문</div>
-                                    <div class="top-meta">
-                                        <span>이한국</span>
-                                        <span style="color:#d32f2f;"><i class="fa-solid fa-heart"></i> 38</span>
-                                    </div>
-                                </div>
-                                <!-- TOP 3 -->
-                                <div class="top-card" onclick="openViewModal()">
-                                    <span class="top-badge">TOP 3</span>
-                                    <div class="top-title">스프링부트 vs JSP 서블릿 차이점 요약</div>
-                                    <div class="top-meta">
-                                        <span>웹마스터</span>
-                                        <span style="color:#d32f2f;"><i class="fa-solid fa-heart"></i> 31</span>
-                                    </div>
-                                </div>
-                                <!-- TOP 4 -->
-                                <div class="top-card" onclick="openViewModal()">
-                                    <span class="top-badge">TOP 4</span>
-                                    <div class="top-title">오늘 저녁 같이 순대국 드실 분? (1/4)</div>
-                                    <div class="top-meta">
-                                        <span>익명</span>
-                                        <span style="color:#d32f2f;"><i class="fa-solid fa-heart"></i> 25</span>
-                                    </div>
-                                </div>
-                                <!-- TOP 5 -->
-                                <div class="top-card" onclick="openViewModal()">
-                                    <span class="top-badge">TOP 5</span>
-                                    <div class="top-title">마우스 추천 좀 부탁드립니다.</div>
-                                    <div class="top-meta">
-                                        <span>개발자지망생</span>
-                                        <span style="color:#d32f2f;"><i class="fa-solid fa-heart"></i> 19</span>
-                                    </div>
-                                </div>
-                            </div>
-                        </section>
-
-                        <!-- 2. 컨트롤 영역 (카테고리 & 검색) -->
-                        <div class="board-controls">
-                            <div class="category-tabs">
-                                <button class="cat-btn active">전체</button>
-                                <button class="cat-btn">자유</button>
-                                <button class="cat-btn">질문</button>
-                                <button class="cat-btn">모집</button>
-                                <button class="cat-btn">후기</button>
-                            </div>
-                            <div class="action-group">
-                                <div class="board-search-box">
-                                    <input type="text" placeholder="게시글 검색...">
-                                    <button><i class="fa-solid fa-magnifying-glass"></i></button>
-                                </div>
-                                <button class="btn-write" onclick="openWriteModal()">
-                                    <i class="fa-solid fa-pen"></i> <span>글쓰기</span>
-                                </button>
-                            </div>
+                <div class="content-container">
+                    <!-- 1. 주간 인기글 TOP 5 -->
+                    <section class="top-posts-section">
+                        <div class="section-title"><i class="fa-solid fa-fire" style="color: #ff8c00;"></i> 주간 인기글 TOP 5
                         </div>
-
-                        <!-- 3. 리스트 필터 -->
-                        <div class="list-filters">
-                            <button class="filter-btn active">전체 글</button>
-                            <button class="filter-btn">내가 쓴 글</button>
-                            <button class="filter-btn">좋아요 누른 글</button>
-                        </div>
-
-                        <!-- 4. 게시글 리스트 -->
-                        <div class="post-list">
-                            <!-- 아이템 1 -->
-                            <div class="post-item"
+                        <div class="top-grid">
+                            <div class="top-card"
                                 onclick="openViewModal('UiPath Element 오류 해결법 아시는 분?', 'RPA 실습 중에 selector를 못 잡는데 어떻게 해야 하나요?', '익명', 45, 12)">
-                                <div class="post-left">
-                                    <span class="post-cat">질문</span>
-                                    <div class="post-info">
-                                        <h4>UiPath Element 오류 해결법 아시는 분?</h4>
-                                        <p><span>익명</span> <span>|</span> <span>10분 전</span></p>
-                                    </div>
-                                </div>
-                                <div class="post-right">
-                                    <div>조회 128</div>
-                                    <div class="stat-badge">
-                                        <span class="likes"><i class="fa-solid fa-heart"></i> 45</span>
-                                        <span><i class="fa-regular fa-comment"></i> 12</span>
-                                    </div>
+                                <span class="top-badge">TOP 1</span>
+                                <div class="top-title">UiPath Element 오류 해결법 아시는 분?</div>
+                                <div class="top-meta">
+                                    <span>익명</span>
+                                    <span style="color:#d32f2f;"><i class="fa-solid fa-heart"></i> 45</span>
                                 </div>
                             </div>
-
-                            <!-- 아이템 2 -->
-                            <div class="post-item"
+                            <div class="top-card"
                                 onclick="openViewModal('기숙사 공용 냉장고 반찬 관련 질문', '내용 생략...', '이한국', 38, 5, true)">
-                                <div class="post-left">
-                                    <span class="post-cat">자유</span>
-                                    <div class="post-info">
-                                        <h4>기숙사 공용 냉장고 반찬 관련 질문</h4>
-                                        <p><span>이한국</span> <span>|</span> <span>1시간 전</span></p>
-                                    </div>
-                                </div>
-                                <div class="post-right">
-                                    <div>조회 89</div>
-                                    <div class="stat-badge">
-                                        <span class="likes"><i class="fa-solid fa-heart"></i> 38</span>
-                                        <span><i class="fa-regular fa-comment"></i> 5</span>
-                                    </div>
+                                <span class="top-badge">TOP 2</span>
+                                <div class="top-title">기숙사 공용 냉장고 반찬 관련 질문</div>
+                                <div class="top-meta">
+                                    <span>이한국</span>
+                                    <span style="color:#d32f2f;"><i class="fa-solid fa-heart"></i> 38</span>
                                 </div>
                             </div>
-
-                            <!-- 아이템 3 -->
-                            <div class="post-item" onclick="openViewModal()">
-                                <div class="post-left">
-                                    <span class="post-cat">모집</span>
-                                    <div class="post-info">
-                                        <h4>오늘 저녁 같이 순대국 드실 분? (1/4)</h4>
-                                        <p><span>익명</span> <span>|</span> <span>3시간 전</span></p>
-                                    </div>
+                            <div class="top-card" onclick="openViewModal()">
+                                <span class="top-badge">TOP 3</span>
+                                <div class="top-title">스프링부트 vs JSP 서블릿 차이점 요약</div>
+                                <div class="top-meta">
+                                    <span>웹마스터</span>
+                                    <span style="color:#d32f2f;"><i class="fa-solid fa-heart"></i> 31</span>
                                 </div>
-                                <div class="post-right">
-                                    <div>조회 56</div>
-                                    <div class="stat-badge">
-                                        <span class="likes"><i class="fa-solid fa-heart"></i> 25</span>
-                                        <span><i class="fa-regular fa-comment"></i> 3</span>
-                                    </div>
+                            </div>
+                            <div class="top-card" onclick="openViewModal()">
+                                <span class="top-badge">TOP 4</span>
+                                <div class="top-title">오늘 저녁 같이 순대국 드실 분? (1/4)</div>
+                                <div class="top-meta">
+                                    <span>익명</span>
+                                    <span style="color:#d32f2f;"><i class="fa-solid fa-heart"></i> 25</span>
+                                </div>
+                            </div>
+                            <div class="top-card" onclick="openViewModal()">
+                                <span class="top-badge">TOP 5</span>
+                                <div class="top-title">마우스 추천 좀 부탁드립니다.</div>
+                                <div class="top-meta">
+                                    <span>개발자지망생</span>
+                                    <span style="color:#d32f2f;"><i class="fa-solid fa-heart"></i> 19</span>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+
+                    <!-- 2. 컨트롤 영역 (카테고리 & 검색) -->
+                    <div class="board-controls">
+                        <div class="category-tabs">
+                            <button class="cat-btn active">전체</button>
+                            <button class="cat-btn">자유</button>
+                            <button class="cat-btn">질문</button>
+                            <button class="cat-btn">모집</button>
+                            <button class="cat-btn">후기</button>
+                        </div>
+                        <div class="action-group">
+                            <div class="board-search-box">
+                                <input type="text" placeholder="게시글 검색...">
+                                <button><i class="fa-solid fa-magnifying-glass"></i></button>
+                            </div>
+                            <button class="btn-write" onclick="openWriteModal()">
+                                <i class="fa-solid fa-pen"></i> <span>글쓰기</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- 3. 리스트 필터 -->
+                    <div class="list-filters">
+                        <button class="filter-btn active">전체 글</button>
+                        <button class="filter-btn">내가 쓴 글</button>
+                        <button class="filter-btn">좋아요 누른 글</button>
+                    </div>
+
+                    <!-- 4. 게시글 리스트 -->
+                    <div class="post-list">
+                        <div class="post-item"
+                            onclick="openViewModal('UiPath Element 오류 해결법 아시는 분?', 'RPA 실습 중에 selector를 못 잡는데 어떻게 해야 하나요?', '익명', 45, 12)">
+                            <div class="post-left">
+                                <span class="post-cat">질문</span>
+                                <div class="post-info">
+                                    <h4>UiPath Element 오류 해결법 아시는 분?</h4>
+                                    <p><span>익명</span> <span>|</span> <span>10분 전</span></p>
+                                </div>
+                            </div>
+                            <div class="post-right">
+                                <div>조회 128</div>
+                                <div class="stat-badge">
+                                    <span class="likes"><i class="fa-solid fa-heart"></i> 45</span>
+                                    <span><i class="fa-regular fa-comment"></i> 12</span>
                                 </div>
                             </div>
                         </div>
 
+                        <div class="post-item"
+                            onclick="openViewModal('기숙사 공용 냉장고 반찬 관련 질문', '내용 생략...', '이한국', 38, 5, true)">
+                            <div class="post-left">
+                                <span class="post-cat">자유</span>
+                                <div class="post-info">
+                                    <h4>기숙사 공용 냉장고 반찬 관련 질문</h4>
+                                    <p><span>이한국</span> <span>|</span> <span>1시간 전</span></p>
+                                </div>
+                            </div>
+                            <div class="post-right">
+                                <div>조회 89</div>
+                                <div class="stat-badge">
+                                    <span class="likes"><i class="fa-solid fa-heart"></i> 38</span>
+                                    <span><i class="fa-regular fa-comment"></i> 5</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="post-item" onclick="openViewModal()">
+                            <div class="post-left">
+                                <span class="post-cat">모집</span>
+                                <div class="post-info">
+                                    <h4>오늘 저녁 같이 순대국 드실 분? (1/4)</h4>
+                                    <p><span>익명</span> <span>|</span> <span>3시간 전</span></p>
+                                </div>
+                            </div>
+                            <div class="post-right">
+                                <div>조회 56</div>
+                                <div class="stat-badge">
+                                    <span class="likes"><i class="fa-solid fa-heart"></i> 25</span>
+                                    <span><i class="fa-regular fa-comment"></i> 3</span>
+                                </div>
+                            </div>
+                        </div>
                     </div>
+
+                </div>
             </div>
+
+            <!-- 하단 네비게이션 바 (모바일) -->
+            <nav class="bottom-nav">
+                <a href="index.jsp" class="nav-item"><i class="fa-solid fa-house"></i><span>홈</span></a>
+                <a href="club_main.jsp" class="nav-item"><i class="fa-solid fa-shield-halved"></i><span>동아리</span></a>
+                <a href="map.jsp" class="nav-item"><i class="fa-solid fa-map-location-dot"></i><span>지도</span></a>
+                <!-- 게시판 페이지이므로 active 클래스를 여기에 설정 -->
+                <a href="club_board.jsp" class="nav-item active"><i
+                        class="fa-solid fa-clipboard-list"></i><span>게시판</span></a>
+                <a href="mypage.jsp" class="nav-item"><i class="fa-solid fa-user"></i><span>MY</span></a>
+            </nav>
 
             <!-- [모달] 1. 글쓰기 팝업 -->
             <div class="modal-overlay" id="writeModal">
@@ -793,7 +942,6 @@
                     <div class="modal-header">
                         <span id="viewTitle">게시글 제목</span>
                         <div style="display: flex; align-items: center; gap: 15px;">
-                            <!-- 작성자 본인일 때만 보이는 수정/삭제 드롭다운 -->
                             <div class="dropdown" id="authorMenu" style="display: none;">
                                 <button class="drop-btn"><i class="fa-solid fa-ellipsis-vertical"></i></button>
                                 <div class="drop-content">
@@ -815,19 +963,15 @@
                         게시글 내용이 여기에 표시됩니다.
                     </div>
 
-                    <!-- 좋아요 버튼 -->
                     <div class="view-actions">
                         <button class="btn-like" id="likeBtn" onclick="toggleLike()">
                             <i class="fa-solid fa-heart"></i> 좋아요 <span id="likeCount">0</span>
                         </button>
                     </div>
 
-                    <!-- 댓글 영역 -->
                     <div class="comment-section">
                         <h4>댓글 <span style="color: var(--primary-blue);" id="commentCount">0</span></h4>
-
                         <div id="commentList">
-                            <!-- 댓글 샘플 -->
                             <div class="comment-item">
                                 <div class="comment-info">
                                     <span class="comment-author">익명1</span>
@@ -852,7 +996,6 @@
             </div>
 
             <!-- 스크립트 -->
-            <script src="${pageContext.request.contextPath}/js/common.js"></script>
             <script>
                 // 1. 카테고리 & 필터 탭 활성화 UI 처리
                 document.querySelectorAll('.cat-btn').forEach(btn => {
@@ -880,7 +1023,7 @@
                     closeWriteModal();
                 }
 
-                // 3. 게시글 보기 모달 제어 (더미 데이터 바인딩)
+                // 3. 게시글 보기 모달 제어
                 let isLiked = false;
                 let currentLikes = 0;
 
@@ -891,7 +1034,6 @@
                     document.getElementById('likeCount').innerText = likes;
                     document.getElementById('commentCount').innerText = comments;
 
-                    // 본인 작성 글일 경우 수정/삭제 메뉴 표시
                     document.getElementById('authorMenu').style.display = isAuthor ? 'block' : 'none';
 
                     currentLikes = likes;

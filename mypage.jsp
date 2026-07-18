@@ -6,15 +6,103 @@
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>티모(Timo) - 마이페이지</title>
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+        <!-- 아이콘 폰트는 sidebar.jsp에서 자체적으로 불러오므로 여기서는 생략 -->
 
-        <!-- 🌟 핵심 수정: 프로젝트 루트를 기준으로 정확한 경로를 찾아감 -->
+        <!-- 프로젝트 루트 기준 경로 유지 -->
         <link rel="stylesheet" href="${pageContext.request.contextPath}/css/common.css">
         <link rel="stylesheet" href="${pageContext.request.contextPath}/css/layout.css">
         <link rel="stylesheet" href="${pageContext.request.contextPath}/css/components.css">
-        <style>
-            /* --- 마이페이지 전용 스타일 --- */
 
+        <style>
+            /* --- main.jsp 구조 연동 및 상단 헤더 스타일 --- */
+            body {
+                background-color: var(--bg-color);
+                display: flex;
+                min-height: 100vh;
+                overflow-x: hidden;
+            }
+
+            /* margin-left는 sidebar.jsp에서 자동으로 제어합니다 */
+            .main-wrapper {
+                flex-grow: 1;
+                display: flex;
+                flex-direction: column;
+                min-height: 100vh;
+            }
+
+            /* 상단 헤더 (main.jsp 스타일 완벽 통일) */
+            .top-header {
+                height: 70px;
+                background-color: var(--white);
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                padding: 0 30px;
+                border-bottom: 1px solid var(--border-color);
+                position: sticky;
+                top: 0;
+                z-index: 90;
+            }
+
+            .header-left {
+                display: flex;
+                align-items: center;
+                gap: 20px;
+            }
+
+            .btn-toggle {
+                background: none;
+                border: none;
+                font-size: 1.5rem;
+                color: var(--text-dark);
+                cursor: pointer;
+            }
+
+            .header-search {
+                display: flex;
+                align-items: center;
+                background: var(--bg-color);
+                border-radius: 20px;
+                padding: 8px 15px;
+                width: 300px;
+                transition: 0.3s;
+            }
+
+            .header-search input {
+                border: none;
+                background: transparent;
+                outline: none;
+                margin-left: 10px;
+                width: 100%;
+                font-size: 0.9rem;
+            }
+
+            .header-search button {
+                background: none;
+                border: none;
+                cursor: pointer;
+                color: var(--text-gray);
+            }
+
+            .header-icons {
+                display: flex;
+                align-items: center;
+                gap: 20px;
+                color: var(--text-gray);
+                font-size: 1.2rem;
+                cursor: pointer;
+            }
+
+            /* 내부 콘텐츠 배치용 레이아웃 간격 조정 */
+            .page-header {
+                padding: 30px 30px 0 30px;
+            }
+
+            .content-container {
+                padding: 30px;
+            }
+
+            /* --- 마이페이지 전용 고유 스타일 --- */
             /* 1. 프로필 카드 */
             .profile-card {
                 display: flex;
@@ -45,7 +133,7 @@
                 flex-grow: 1;
             }
 
-            .profile-name {
+            .profile-card-name {
                 font-size: 1.5rem;
                 font-weight: 800;
                 margin-bottom: 8px;
@@ -442,12 +530,24 @@
                     gap: 5px;
                 }
 
-                .profile-name {
+                .profile-card-name {
                     justify-content: center;
                 }
 
                 .stat-grid {
                     grid-template-columns: repeat(2, 1fr);
+                }
+
+                .page-header {
+                    padding: 15px 15px 0 15px;
+                }
+
+                .content-container {
+                    padding: 15px;
+                }
+
+                .header-search {
+                    width: 180px;
                 }
             }
         </style>
@@ -455,117 +555,131 @@
 
     <body>
 
-        <!-- 공통 사이드바 불러오기 -->
+        <!-- 분리된 공통 사이드바 연동 -->
         <%@ include file="common/sidebar.jsp" %>
 
+            <!-- main.jsp 처럼 전체 페이지를 감싸 밀어내기 효과 적용 -->
             <div class="main-wrapper" id="mainWrapper">
 
-                <!-- 공통 탑 헤더 불러오기 -->
-                <%@ include file="common/header.jsp" %>
+                <!-- main.jsp와 일치하는 상단 헤더 직접 탑재 (사이드바 토글 및 동아리 검색 정상 작동) -->
+                <header class="top-header">
+                    <div class="header-left">
+                        <button class="btn-toggle" onclick="toggleSidebar()"><i class="fa-solid fa-bars"></i></button>
 
-                    <div class="page-header">
-                        <h1>마이페이지</h1>
-                        <p>내 활동 내역과 계정 정보를 관리하세요.</p>
+                        <form class="header-search" onsubmit="searchClub(event)">
+                            <i class="fa-solid fa-magnifying-glass"></i>
+                            <input type="text" id="searchInput" placeholder="동아리명 검색..." required>
+                            <button type="submit" style="display: none;"></button>
+                        </form>
+                    </div>
+                    <div class="header-icons">
+                        <i class="fa-regular fa-bell"></i>
+                    </div>
+                </header>
+
+                <!-- 마이페이지 콘텐츠 영역 시작 -->
+                <div class="page-header">
+                    <h1>마이페이지</h1>
+                    <p>내 활동 내역과 계정 정보를 관리하세요.</p>
+                </div>
+
+                <div class="content-container">
+
+                    <!-- 1. 계정 정보 (프로필 카드) -->
+                    <div class="profile-card">
+                        <div class="profile-avatar"><i class="fa-solid fa-user"></i></div>
+                        <div class="profile-info">
+                            <div class="profile-card-name">
+                                이한국 <span class="profile-badge">AI소프트웨어학과</span>
+                            </div>
+                            <div class="profile-meta">
+                                <span><i class="fa-regular fa-envelope"></i> hk.lee@tukorea.ac.kr</span>
+                                <span><i class="fa-regular fa-calendar-check"></i> 가입일: 2025.03.02</span>
+                            </div>
+                            <div class="profile-bio">
+                                "안녕하세요! AI소프트웨어학과 2학년 이한국입니다. 웹 개발에 관심이 많습니다!"
+                            </div>
+                        </div>
+                        <button class="btn-edit-profile" onclick="openProfileModal()"><i class="fa-solid fa-pen"></i>
+                            프로필 수정</button>
                     </div>
 
-                    <div class="content-container">
+                    <!-- 2. 활동 현황 통계 -->
+                    <div class="stat-grid">
+                        <div class="stat-box">
+                            <div class="stat-title">가입한 동아리</div>
+                            <div class="stat-num">2<span style="font-size:1rem;">개</span></div>
+                            <a href="#clubSection" class="stat-link">내역 보기 ></a>
+                        </div>
+                        <div class="stat-box">
+                            <div class="stat-title">참여한 모임</div>
+                            <div class="stat-num">8<span style="font-size:1rem;">회</span></div>
+                            <a href="#" class="stat-link">내역 보기 ></a>
+                        </div>
+                        <div class="stat-box">
+                            <div class="stat-title">작성한 게시글</div>
+                            <div class="stat-num">15<span style="font-size:1rem;">개</span></div>
+                            <a href="#" class="stat-link">내역 보기 ></a>
+                        </div>
+                        <div class="stat-box">
+                            <div class="stat-title">작성한 댓글</div>
+                            <div class="stat-num">37<span style="font-size:1rem;">개</span></div>
+                            <a href="#" class="stat-link">내역 보기 ></a>
+                        </div>
+                    </div>
 
-                        <!-- 1. 계정 정보 (프로필 카드) -->
-                        <div class="profile-card">
-                            <div class="profile-avatar"><i class="fa-solid fa-user"></i></div>
-                            <div class="profile-info">
-                                <div class="profile-name">
-                                    이한국 <span class="profile-badge">AI소프트웨어학과</span>
-                                </div>
-                                <div class="profile-meta">
-                                    <span><i class="fa-regular fa-envelope"></i> hk.lee@tukorea.ac.kr</span>
-                                    <span><i class="fa-regular fa-calendar-check"></i> 가입일: 2025.03.02</span>
-                                </div>
-                                <div class="profile-bio">
-                                    "안녕하세요! AI소프트웨어학과 2학년 이한국입니다. 웹 개발에 관심이 많습니다!"
-                                </div>
-                            </div>
-                            <button class="btn-edit-profile" onclick="openProfileModal()"><i
-                                    class="fa-solid fa-pen"></i> 프로필 수정</button>
+                    <!-- 3. 내가 만든 소모임 -->
+                    <div class="section-card">
+                        <div class="section-header">
+                            <span><i class="fa-solid fa-user-group"></i> 내가 만든 소모임</span>
                         </div>
 
-                        <!-- 2. 활동 현황 통계 -->
-                        <div class="stat-grid">
-                            <div class="stat-box">
-                                <div class="stat-title">가입한 동아리</div>
-                                <div class="stat-num">2<span style="font-size:1rem;">개</span></div>
-                                <a href="#clubSection" class="stat-link">내역 보기 ></a>
-                            </div>
-                            <div class="stat-box">
-                                <div class="stat-title">참여한 모임</div>
-                                <div class="stat-num">8<span style="font-size:1rem;">회</span></div>
-                                <a href="#" class="stat-link">내역 보기 ></a>
-                            </div>
-                            <div class="stat-box">
-                                <div class="stat-title">작성한 게시글</div>
-                                <div class="stat-num">15<span style="font-size:1rem;">개</span></div>
-                                <a href="#" class="stat-link">내역 보기 ></a>
-                            </div>
-                            <div class="stat-box">
-                                <div class="stat-title">작성한 댓글</div>
-                                <div class="stat-num">37<span style="font-size:1rem;">개</span></div>
-                                <a href="#" class="stat-link">내역 보기 ></a>
-                            </div>
+                        <!-- 빈 화면 (Empty State) -->
+                        <div class="empty-state">
+                            <i class="fa-solid fa-seedling"></i>
+                            <p>게시한 소모임이 없습니다.<br>관심사가 맞는 학우들과 새로운 모임을 만들어보세요!</p>
+                            <button class="btn-action" onclick="location.href='meeting_create.jsp'"><i
+                                    class="fa-solid fa-plus"></i> 소모임 만들기</button>
+                        </div>
+                    </div>
+
+                    <!-- 4. 가입한 동아리 & 신청 현황 (탭 기능) -->
+                    <div class="section-card" id="clubSection">
+                        <div class="section-header">
+                            <span><i class="fa-solid fa-shield-halved"></i> 나의 동아리 활동</span>
                         </div>
 
-                        <!-- 3. 내가 만든 소모임 -->
-                        <div class="section-card">
-                            <div class="section-header">
-                                <span><i class="fa-solid fa-user-group"></i> 내가 만든 소모임</span>
-                            </div>
+                        <div class="tab-buttons">
+                            <button class="tab-btn active" onclick="switchTab('joined')">가입한 동아리 (0)</button>
+                            <button class="tab-btn" onclick="switchTab('applied')">가입 신청 현황 (0)</button>
+                        </div>
 
-                            <!-- 빈 화면 (Empty State) -->
+                        <!-- 탭 1: 가입한 동아리 내용 -->
+                        <div id="tab-joined" class="tab-content active">
                             <div class="empty-state">
-                                <i class="fa-solid fa-seedling"></i>
-                                <p>게시한 소모임이 없습니다.<br>관심사가 맞는 학우들과 새로운 모임을 만들어보세요!</p>
-                                <button class="btn-action" onclick="location.href='meeting_create.jsp'"><i
-                                        class="fa-solid fa-plus"></i> 소모임 만들기</button>
+                                <i class="fa-solid fa-ghost"></i>
+                                <p>아직 가입한 공식 동아리가 없습니다.</p>
+                                <button class="btn-action" onclick="location.href='club_main.jsp'">동아리 가입하러 가기</button>
                             </div>
                         </div>
 
-                        <!-- 4. 가입한 동아리 & 신청 현황 (탭 기능) -->
-                        <div class="section-card" id="clubSection">
-                            <div class="section-header">
-                                <span><i class="fa-solid fa-shield-halved"></i> 나의 동아리 활동</span>
-                            </div>
-
-                            <div class="tab-buttons">
-                                <button class="tab-btn active" onclick="switchTab('joined')">가입한 동아리 (0)</button>
-                                <button class="tab-btn" onclick="switchTab('applied')">가입 신청 현황 (0)</button>
-                            </div>
-
-                            <!-- 탭 1: 가입한 동아리 내용 -->
-                            <div id="tab-joined" class="tab-content active">
-                                <div class="empty-state">
-                                    <i class="fa-solid fa-ghost"></i>
-                                    <p>아직 가입한 공식 동아리가 없습니다.</p>
-                                    <button class="btn-action" onclick="location.href='club_main.jsp'">동아리 가입하러
-                                        가기</button>
-                                </div>
-                            </div>
-
-                            <!-- 탭 2: 신청 현황 내용 -->
-                            <div id="tab-applied" class="tab-content">
-                                <div class="empty-state" style="background: #fafafa;">
-                                    <i class="fa-solid fa-envelope-open-text"></i>
-                                    <p>현재 심사 대기 중인 가입 신청서가 없습니다.</p>
-                                </div>
+                        <!-- 탭 2: 신청 현황 내용 -->
+                        <div id="tab-applied" class="tab-content">
+                            <div class="empty-state" style="background: #fafafa;">
+                                <i class="fa-solid fa-envelope-open-text"></i>
+                                <p>현재 심사 대기 중인 가입 신청서가 없습니다.</p>
                             </div>
                         </div>
-
-                        <!-- 5. 맨 하단 로그아웃 -->
-                        <div class="logout-wrap">
-                            <button class="btn-logout" onclick="alert('로그아웃 되었습니다.'); location.href='login.jsp';">
-                                <i class="fa-solid fa-arrow-right-from-bracket"></i> 로그아웃
-                            </button>
-                        </div>
-
                     </div>
+
+                    <!-- 5. 맨 하단 로그아웃 -->
+                    <div class="logout-wrap">
+                        <button class="btn-logout" onclick="alert('로그아웃 되었습니다.'); location.href='login.jsp';">
+                            <i class="fa-solid fa-arrow-right-from-bracket"></i> 로그아웃
+                        </button>
+                    </div>
+
+                </div>
             </div>
 
             <!-- 6. 프로필 수정 팝업 (모달) -->
@@ -610,11 +724,19 @@
                 </div>
             </div>
 
-            <!-- 공통 스크립트 불러오기 (사이드바 토글 등) -->
-            <script src="js/common.js"></script>
-
-            <!-- 마이페이지 전용 스크립트 -->
+            <!-- 마이페이지 전용 비즈니스 로직 및 통합 이벤트 스크립트 -->
             <script>
+                // 헤더 연동형 검색 처리 스크립트 (main.jsp와 동일)
+                function searchClub(event) {
+                    event.preventDefault();
+                    const keyword = document.getElementById('searchInput').value;
+                    if (keyword.trim() === '') {
+                        alert('검색어를 입력해주세요.');
+                    } else {
+                        alert("'" + keyword + "' 동아리를 검색합니다. (검색결과 페이지로 이동)");
+                    }
+                }
+
                 // 1. 프로필 모달 열고 닫기
                 const modal = document.getElementById('profileModal');
                 function openProfileModal() { modal.classList.add('show'); }
@@ -627,18 +749,16 @@
 
                 // 프로필 저장 버튼 클릭 시
                 function saveProfile(e) {
-                    e.preventDefault(); // 폼 새로고침 방지
+                    e.preventDefault();
                     alert('프로필 정보가 성공적으로 수정되었습니다.');
                     closeProfileModal();
                 }
 
                 // 2. 탭 전환 로직 (가입한 동아리 / 신청 현황)
                 function switchTab(tabName) {
-                    // 모든 탭 버튼과 컨텐츠의 active 클래스 제거
                     document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
                     document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
 
-                    // 클릭한 탭 활성화
                     if (tabName === 'joined') {
                         document.querySelectorAll('.tab-btn')[0].classList.add('active');
                         document.getElementById('tab-joined').classList.add('active');
