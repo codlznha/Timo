@@ -1,4 +1,4 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" isELIgnored="true"%>
 <!DOCTYPE html>
 <html lang="ko">
 <head>
@@ -257,6 +257,11 @@
             text-align: center;
             background-color: #fafafa;
             transition: transform 0.2s;
+            /* 학과명 길이가 제각각이라도(데이터사이언스, 인공지능소프트웨어학과 등)
+               카드를 세로 flex로 만들고 액션 영역을 margin-top:auto로 항상 하단에 고정 */
+            display: flex;
+            flex-direction: column;
+            height: 100%;
         }
 
         .member-card:hover {
@@ -301,6 +306,9 @@
         .member-dept {
             font-size: 0.75rem;
             color: var(--text-gray);
+            /* 학과명이 길어 줄바꿈되어도 아래 액션 버튼 위치가 카드마다 달라지지 않도록
+               남는 세로 공간을 이 영역이 흡수하게 함 */
+            flex-grow: 1;
         }
 
         /* 임원진 강조 스타일 */
@@ -312,6 +320,70 @@
         .executive-card .member-avatar {
             width: 60px;
             height: 60px;
+        }
+
+        /* --- 회원관리 탭 UI --- */
+        .manage-notice {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background-color: var(--primary-light);
+            color: var(--primary-blue);
+            font-size: 0.85rem;
+            font-weight: bold;
+            padding: 12px 15px;
+            border-radius: 8px;
+            margin-bottom: 25px;
+        }
+
+        .member-actions {
+            /* 학과명 줄바꿈으로 카드 높이가 달라져도, 액션 영역은 항상 카드 맨 아래에 붙도록 고정 */
+            margin-top: auto;
+            padding-top: 8px;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .btn-rank, .btn-kick {
+            width: 100%;
+            padding: 5px 0;
+            font-size: 0.7rem;
+            font-weight: bold;
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            background-color: var(--white);
+            color: var(--text-gray);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 4px;
+            transition: 0.2s;
+        }
+
+        .btn-rank.promote:hover {
+            border-color: #2e7d32;
+            color: #2e7d32;
+            background-color: #eaf5ea;
+        }
+
+        .btn-rank.demote:hover {
+            border-color: #d32f2f;
+            color: #d32f2f;
+            background-color: #fbeaea;
+        }
+
+        /* 강퇴 버튼: 등급 변경(승급/강등)과 명확히 구분되도록 위험 액션 스타일 적용 */
+        .btn-kick {
+            border-color: #f3c1c1;
+            color: #d32f2f;
+        }
+
+        .btn-kick:hover {
+            border-color: #d32f2f;
+            color: #ffffff;
+            background-color: #d32f2f;
         }
 
         /* --- 상단 네비게이션 바 --- */
@@ -339,6 +411,173 @@
         .top-nav .nav-item.active {
             color: var(--primary-blue);
             background-color: var(--primary-light);
+        }
+
+        /* --- 가입 신청 관리 탭 UI --- */
+        .applicant-list {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .applicant-item {
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            padding: 18px 20px;
+            background-color: #fafafa;
+            transition: 0.2s;
+        }
+
+        .applicant-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            cursor: pointer;
+            gap: 10px;
+        }
+
+        .applicant-name-wrap {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .applicant-avatar {
+            width: 42px;
+            height: 42px;
+            border-radius: 50%;
+            background-color: var(--border-color);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #ccc;
+            font-size: 1.2rem;
+            flex-shrink: 0;
+        }
+
+        .applicant-name {
+            font-weight: bold;
+            font-size: 0.95rem;
+            color: var(--text-dark);
+        }
+
+        .applicant-meta {
+            font-size: 0.8rem;
+            color: var(--text-gray);
+            margin-top: 2px;
+        }
+
+        .applicant-right {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .applicant-status {
+            font-size: 0.75rem;
+            font-weight: bold;
+            padding: 4px 10px;
+            border-radius: 20px;
+            white-space: nowrap;
+        }
+
+        .status-waiting {
+            background-color: #fff4d6;
+            color: #b8860b;
+        }
+
+        .status-pass {
+            background-color: #e3f5e6;
+            color: #1e8e4a;
+        }
+
+        .status-fail {
+            background-color: #fbe1e1;
+            color: #c0392b;
+        }
+
+        .applicant-toggle-icon {
+            color: var(--text-gray);
+            transition: 0.2s;
+        }
+
+        .applicant-item.open .applicant-toggle-icon {
+            transform: rotate(180deg);
+        }
+
+        .applicant-detail {
+            display: none;
+            margin-top: 16px;
+            padding-top: 16px;
+            border-top: 1px dashed var(--border-color);
+            font-size: 0.9rem;
+        }
+
+        .applicant-item.open .applicant-detail {
+            display: block;
+        }
+
+        .applicant-detail-row {
+            margin-bottom: 14px;
+        }
+
+        .applicant-detail-label {
+            font-weight: bold;
+            color: var(--text-dark);
+            margin-bottom: 5px;
+        }
+
+        .applicant-detail-value {
+            color: var(--text-gray);
+            line-height: 1.6;
+            white-space: pre-line;
+        }
+
+        .applicant-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 18px;
+        }
+
+        .btn-pass,
+        .btn-fail {
+            flex: 1;
+            padding: 10px;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            font-weight: bold;
+            border: none;
+            cursor: pointer;
+            transition: 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+        }
+
+        .btn-pass {
+            background-color: #1e8e4a;
+            color: #fff;
+        }
+
+        .btn-pass:hover {
+            background-color: #167339;
+        }
+
+        .btn-fail {
+            background-color: #c0392b;
+            color: #fff;
+        }
+
+        .btn-fail:hover {
+            background-color: #a1301f;
+        }
+
+        .btn-pass:disabled,
+        .btn-fail:disabled {
+            background-color: #e0e0e0;
+            color: #a0a0a0;
+            cursor: not-allowed;
         }
 
         /* 반응형 모바일 처리 */
@@ -416,6 +655,8 @@
                 <button class="tab-btn" onclick="openTab(event, 'free')">자유게시판</button>
                 <button class="tab-btn" onclick="openTab(event, 'review')">후기게시판</button>
                 <button class="tab-btn" onclick="openTab(event, 'members')">동아리원</button>
+                <button class="tab-btn" onclick="openTab(event, 'manage')">회원관리</button>
+                <button class="tab-btn" onclick="openTab(event, 'apply')">가입 신청<span id="applyPendingBadge"></span></button>
             </div>
 
             <div id="notice" class="tab-content active card">
@@ -504,10 +745,120 @@
                     </div>
                 </div>
             </div>
+
+            <div id="manage" class="tab-content card">
+
+                <div class="manage-notice">
+                    <i class="fa-solid fa-circle-info"></i> 회장만 부원의 등급을 승급·강등하거나 동아리에서 강퇴할 수 있습니다.
+                </div>
+
+                <h3 class="member-section-title"><i class="fa-solid fa-crown" style="color: #f1c40f;"></i> 회장</h3>
+                <div class="executives-grid" id="presidentGrid">
+                    <div class="member-card executive-card" data-name="이호성" data-dept="소프트웨어학과" data-role="회장">
+                        <div class="member-avatar"><i class="fa-solid fa-user"></i></div>
+                        <div class="member-role">회장</div>
+                        <div class="member-name">이호성</div>
+                        <div class="member-dept">소프트웨어학과</div>
+                    </div>
+                </div>
+
+                <h3 class="member-section-title">
+                    <i class="fa-solid fa-star" style="color: var(--primary-blue);"></i> 임원 <span id="officerCount">(2명)</span>
+                </h3>
+                <div class="executives-grid" id="officerGrid">
+                    <div class="member-card executive-card" data-name="임채이" data-dept="소프트웨어학과" data-role="임원">
+                        <div class="member-avatar"><i class="fa-solid fa-user"></i></div>
+                        <div class="member-role">임원</div>
+                        <div class="member-name">임채이</div>
+                        <div class="member-dept">소프트웨어학과</div>
+                        <div class="member-actions">
+                            <button class="btn-rank demote" onclick="demoteMember(this)"><i class="fa-solid fa-arrow-down"></i> 강등</button>
+                            <button class="btn-kick" onclick="kickMember(this)"><i class="fa-solid fa-user-slash"></i> 강퇴</button>
+                        </div>
+                    </div>
+                    <div class="member-card executive-card" data-name="우동훈" data-dept="소프트웨어학과" data-role="임원">
+                        <div class="member-avatar"><i class="fa-solid fa-user"></i></div>
+                        <div class="member-role">임원</div>
+                        <div class="member-name">우동훈</div>
+                        <div class="member-dept">소프트웨어학과</div>
+                        <div class="member-actions">
+                            <button class="btn-rank demote" onclick="demoteMember(this)"><i class="fa-solid fa-arrow-down"></i> 강등</button>
+                            <button class="btn-kick" onclick="kickMember(this)"><i class="fa-solid fa-user-slash"></i> 강퇴</button>
+                        </div>
+                    </div>
+                </div>
+
+                <h3 class="member-section-title">
+                    <i class="fa-solid fa-users" style="color: var(--text-gray);"></i> 회원 <span id="memberCount">(5명)</span>
+                </h3>
+                <div class="members-grid" id="memberGrid">
+                    <div class="member-card" data-name="최프론트" data-dept="컴퓨터공학과" data-role="회원">
+                        <div class="member-avatar"><i class="fa-solid fa-user"></i></div>
+                        <div class="member-name">최프론트</div>
+                        <div class="member-dept">컴퓨터공학과</div>
+                        <div class="member-actions">
+                            <button class="btn-rank promote" onclick="promoteMember(this)"><i class="fa-solid fa-arrow-up"></i> 승급</button>
+                            <button class="btn-kick" onclick="kickMember(this)"><i class="fa-solid fa-user-slash"></i> 강퇴</button>
+                        </div>
+                    </div>
+                    <div class="member-card" data-name="정백엔드" data-dept="인공지능소프트웨어학과" data-role="회원">
+                        <div class="member-avatar"><i class="fa-solid fa-user"></i></div>
+                        <div class="member-name">정백엔드</div>
+                        <div class="member-dept">인공지능소프트웨어학과</div>
+                        <div class="member-actions">
+                            <button class="btn-rank promote" onclick="promoteMember(this)"><i class="fa-solid fa-arrow-up"></i> 승급</button>
+                            <button class="btn-kick" onclick="kickMember(this)"><i class="fa-solid fa-user-slash"></i> 강퇴</button>
+                        </div>
+                    </div>
+                    <div class="member-card" data-name="강디자인" data-dept="산업디자인공학" data-role="회원">
+                        <div class="member-avatar"><i class="fa-solid fa-user"></i></div>
+                        <div class="member-name">강디자인</div>
+                        <div class="member-dept">산업디자인공학</div>
+                        <div class="member-actions">
+                            <button class="btn-rank promote" onclick="promoteMember(this)"><i class="fa-solid fa-arrow-up"></i> 승급</button>
+                            <button class="btn-kick" onclick="kickMember(this)"><i class="fa-solid fa-user-slash"></i> 강퇴</button>
+                        </div>
+                    </div>
+                    <div class="member-card" data-name="유서버" data-dept="인공지능소프트웨어학과" data-role="회원">
+                        <div class="member-avatar"><i class="fa-solid fa-user"></i></div>
+                        <div class="member-name">유서버</div>
+                        <div class="member-dept">인공지능소프트웨어학과</div>
+                        <div class="member-actions">
+                            <button class="btn-rank promote" onclick="promoteMember(this)"><i class="fa-solid fa-arrow-up"></i> 승급</button>
+                            <button class="btn-kick" onclick="kickMember(this)"><i class="fa-solid fa-user-slash"></i> 강퇴</button>
+                        </div>
+                    </div>
+                    <div class="member-card" data-name="조데이터" data-dept="데이터사이언스" data-role="회원">
+                        <div class="member-avatar"><i class="fa-solid fa-user"></i></div>
+                        <div class="member-name">조데이터</div>
+                        <div class="member-dept">데이터사이언스</div>
+                        <div class="member-actions">
+                            <button class="btn-rank promote" onclick="promoteMember(this)"><i class="fa-solid fa-arrow-up"></i> 승급</button>
+                            <button class="btn-kick" onclick="kickMember(this)"><i class="fa-solid fa-user-slash"></i> 강퇴</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="apply" class="tab-content card">
+
+                <div class="manage-notice">
+                    <i class="fa-solid fa-circle-info"></i> 회장만 가입 신청을 합격·불합격 처리할 수 있습니다.
+                </div>
+
+                <h3 class="member-section-title"><i class="fa-solid fa-clipboard-list" style="color: var(--primary-blue);"></i>
+                    가입 신청자 목록 <span id="applicantCount"></span></h3>
+
+                <div class="applicant-list" id="applicantList"></div>
+
+            </div>
         </main>
     </div>
 
     <script>
+        // 데모용: 실제 서비스에서는 로그인한 사용자의 역할을 서버에서 받아와 판단해야 합니다.
+        const isPresident = true;
+
         function openTab(evt, tabName) {
             // 모든 탭 콘텐츠 숨기기
             var tabContents = document.getElementsByClassName("tab-content");
@@ -525,6 +876,202 @@
             document.getElementById(tabName).classList.add("active");
             evt.currentTarget.classList.add("active");
         }
+
+        // --- 회원관리: 승급 / 강등 ---
+        function buildMemberCard(name, dept, role) {
+            const isExecutive = (role !== '회원');
+            const roleHtml = isExecutive ? '<div class="member-role">' + role + '</div>' : '';
+            const cardClass = 'member-card' + (isExecutive ? ' executive-card' : '');
+
+            let actionHtml = '';
+            if (isPresident) {
+                const rankBtnHtml = (role === '회원')
+                    ? '<button class="btn-rank promote" onclick="promoteMember(this)"><i class="fa-solid fa-arrow-up"></i> 승급</button>'
+                    : '<button class="btn-rank demote" onclick="demoteMember(this)"><i class="fa-solid fa-arrow-down"></i> 강등</button>';
+                const kickBtnHtml = '<button class="btn-kick" onclick="kickMember(this)"><i class="fa-solid fa-user-slash"></i> 강퇴</button>';
+                actionHtml = '<div class="member-actions">' + rankBtnHtml + kickBtnHtml + '</div>';
+            }
+
+            return '<div class="' + cardClass + '" data-name="' + name + '" data-dept="' + dept + '" data-role="' + role + '">' +
+                '<div class="member-avatar"><i class="fa-solid fa-user"></i></div>' +
+                roleHtml +
+                '<div class="member-name">' + name + '</div>' +
+                '<div class="member-dept">' + dept + '</div>' +
+                actionHtml +
+                '</div>';
+        }
+
+        function updateRankCounts() {
+            document.getElementById('officerCount').textContent = '(' + document.querySelectorAll('#officerGrid .member-card').length + '명)';
+            document.getElementById('memberCount').textContent = '(' + document.querySelectorAll('#memberGrid .member-card').length + '명)';
+        }
+
+        // 회원 -> 임원 승급 (회장만 가능)
+        function promoteMember(button) {
+            if (!isPresident) return;
+            const card = button.closest('.member-card');
+            const name = card.dataset.name, dept = card.dataset.dept;
+
+            if (!confirm("'" + name + "' 님을 임원으로 승급하시겠습니까?")) return;
+
+            card.remove();
+            document.getElementById('officerGrid').insertAdjacentHTML('beforeend', buildMemberCard(name, dept, '임원'));
+            updateRankCounts();
+            alert(name + " 님이 임원으로 승급되었습니다.");
+        }
+
+        // 임원 -> 회원 강등 (회장만 가능)
+        function demoteMember(button) {
+            if (!isPresident) return;
+            const card = button.closest('.member-card');
+            const name = card.dataset.name, dept = card.dataset.dept;
+
+            if (!confirm("'" + name + "' 님을 회원으로 강등하시겠습니까?")) return;
+
+            card.remove();
+            document.getElementById('memberGrid').insertAdjacentHTML('beforeend', buildMemberCard(name, dept, '회원'));
+            updateRankCounts();
+            alert(name + " 님이 회원으로 강등되었습니다.");
+        }
+
+        // 동아리원 강퇴 (회장만 가능, 임원/회원 모두 대상)
+        function kickMember(button) {
+            if (!isPresident) return;
+            const card = button.closest('.member-card');
+            const name = card.dataset.name;
+
+            if (!confirm("'" + name + "' 님을 동아리에서 강퇴하시겠습니까?\n이 작업은 되돌릴 수 없습니다.")) return;
+
+            card.remove();
+            updateRankCounts();
+            alert(name + " 님이 동아리에서 강퇴되었습니다.");
+        }
+
+        // --- 가입 신청 관리: 신청자 목록 / 합격 / 불합격 ---
+        // 실제 서비스에서는 club_apply.jsp를 통해 제출된 신청서를 서버에서 조회해와야 합니다. (예시 목데이터)
+        let applicants = [
+            {
+                id: 1,
+                name: "임채이",
+                dept: "AI소프트웨어학과",
+                studentId: "20251234",
+                motivation: "평소 웹/앱 서비스를 직접 만들어보고 싶었고, 팀 프로젝트 경험을 쌓고 싶어 지원하게 되었습니다.",
+                techStack: "HTML/CSS 기초 수강, 자바스크립트 개인 프로젝트 경험",
+                interviewDate: "5월 12일 (수) 오후 6시",
+                status: "waiting"
+            },
+            {
+                id: 2,
+                name: "박서준",
+                dept: "컴퓨터공학과",
+                studentId: "20241102",
+                motivation: "개발 동아리 활동을 통해 실무 감각을 익히고, 선배들과 네트워킹하고 싶어 지원합니다.",
+                techStack: "없음",
+                interviewDate: "5월 13일 (목) 오후 6시",
+                status: "waiting"
+            },
+            {
+                id: 3,
+                name: "한소희",
+                dept: "산업디자인공학",
+                studentId: "20250789",
+                motivation: "UI/UX 디자인에 관심이 많아 개발자분들과 함께 서비스를 기획해보고 싶습니다.",
+                techStack: "Figma 활용 가능, HTML/CSS 기초",
+                interviewDate: "해당 일정 모두 불가능 (별도 연락 요망)",
+                status: "pass"
+            }
+        ];
+
+        const applicantStatusInfo = {
+            waiting: { label: "심사중", cls: "status-waiting" },
+            pass: { label: "합격", cls: "status-pass" },
+            fail: { label: "불합격", cls: "status-fail" }
+        };
+
+        function renderApplicants() {
+            const listEl = document.getElementById('applicantList');
+            const countEl = document.getElementById('applicantCount');
+            const badgeEl = document.getElementById('applyPendingBadge');
+            listEl.innerHTML = '';
+
+            const waitingCount = applicants.filter(a => a.status === 'waiting').length;
+            countEl.textContent = '(' + applicants.length + '명)';
+            badgeEl.textContent = waitingCount > 0 ? ' (' + waitingCount + ')' : '';
+
+            applicants.forEach(app => {
+                const s = applicantStatusInfo[app.status];
+                const isWaiting = app.status === 'waiting';
+
+                const item = document.createElement('div');
+                item.className = 'applicant-item';
+                item.id = 'applicant-' + app.id;
+                item.innerHTML = `
+                    <div class="applicant-top" onclick="toggleApplicantDetail(${app.id})">
+                        <div class="applicant-name-wrap">
+                            <div class="applicant-avatar"><i class="fa-solid fa-user"></i></div>
+                            <div>
+                                <div class="applicant-name">${app.name}</div>
+                                <div class="applicant-meta">${app.dept} · ${app.studentId}</div>
+                            </div>
+                        </div>
+                        <div class="applicant-right">
+                            <span class="applicant-status ${s.cls}">${s.label}</span>
+                            <i class="fa-solid fa-chevron-down applicant-toggle-icon"></i>
+                        </div>
+                    </div>
+                    <div class="applicant-detail">
+                        <div class="applicant-detail-row">
+                            <div class="applicant-detail-label">지원 동기</div>
+                            <div class="applicant-detail-value">${app.motivation}</div>
+                        </div>
+                        <div class="applicant-detail-row">
+                            <div class="applicant-detail-label">기술 스택 / 경험</div>
+                            <div class="applicant-detail-value">${app.techStack}</div>
+                        </div>
+                        <div class="applicant-detail-row">
+                            <div class="applicant-detail-label">면접 희망 일정</div>
+                            <div class="applicant-detail-value">${app.interviewDate}</div>
+                        </div>
+                        ${isPresident ? `
+                        <div class="applicant-actions">
+                            <button class="btn-fail" ${isWaiting ? '' : 'disabled'} onclick="decideApplicant(event, ${app.id}, 'fail')">
+                                <i class="fa-solid fa-xmark"></i> 불합격
+                            </button>
+                            <button class="btn-pass" ${isWaiting ? '' : 'disabled'} onclick="decideApplicant(event, ${app.id}, 'pass')">
+                                <i class="fa-solid fa-check"></i> 합격
+                            </button>
+                        </div>` : ''}
+                    </div>
+                `;
+                listEl.appendChild(item);
+            });
+        }
+
+        function toggleApplicantDetail(id) {
+            document.getElementById('applicant-' + id).classList.toggle('open');
+        }
+
+        function decideApplicant(evt, id, decision) {
+            evt.stopPropagation(); // 상세보기 토글과 겹치지 않도록 이벤트 전파 차단
+
+            if (!isPresident) return;
+            const app = applicants.find(a => a.id === id);
+            if (!app) return;
+
+            const label = decision === 'pass' ? '합격' : '불합격';
+            if (!confirm("'" + app.name + "' 님의 가입 신청을 " + label + " 처리하시겠습니까?")) return;
+
+            // 실제 서비스에서는 이 부분에서 서버로 합격/불합격 결과를 전송합니다.
+            app.status = decision;
+            renderApplicants();
+
+            const item = document.getElementById('applicant-' + id);
+            if (item) item.classList.add('open');
+
+            alert(app.name + " 님이 " + label + " 처리되었습니다.");
+        }
+
+        renderApplicants();
     </script>
 </body>
 </html>

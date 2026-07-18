@@ -126,16 +126,12 @@
     <div class="sidebar-logo"><i class="fa-solid fa-graduation-cap"></i> 티모(Timo)</div>
     <div class="sidebar-profile">
         <div class="profile-img"><i class="fa-solid fa-user"></i></div>
-        <div class="profile-name">이한국 님</div>
+        <div class="profile-name">관리자 님</div>
     </div>
     <nav class="sidebar-menu">
         <div class="menu-title">MAIN MENU</div>
-        <a href="main.jsp" class="menu-item <%= currentPage.equals("main.jsp") ? "active" : "" %>"><i class="fa-solid fa-house"></i> 홈</a>
-        <a href="club_main.jsp" class="menu-item <%= currentPage.equals("club_main.jsp") ? "active" : "" %>"><i class="fa-solid fa-shield-halved"></i> 공식 동아리</a>
-        <a href="meeting_list.jsp" class="menu-item <%= currentPage.equals("meeting_list.jsp") ? "active" : "" %>"><i class="fa-solid fa-user-group"></i> 자율 소모임</a>
-        <a href="map.jsp" class="menu-item <%= currentPage.equals("map.jsp") ? "active" : "" %>"><i class="fa-solid fa-map-location-dot"></i> 지도</a>
-        <a href="sos_board.jsp" class="menu-item <%= currentPage.equals("sos_board.jsp") ? "active" : "" %>"><i class="fa-solid fa-clipboard-list"></i> 게시판</a>
-        <a href="mypage.jsp" class="menu-item <%= currentPage.equals("mypage.jsp") ? "active" : "" %>"><i class="fa-solid fa-user"></i> MY</a>
+        <a href="add_club_check.jsp" class="menu-item <%= currentPage.equals("club_approve.jsp") ? "active" : "" %>"><i class="fa-solid fa-shield-halved"></i> 동아리 승인</a>
+        <a href="notice_write.jsp" class="menu-item <%= currentPage.equals("notice_write.jsp") ? "active" : "" %>"><i class="fa-solid fa-pen-to-square"></i> 공지 작성</a>
     </nav>
 </aside>
 
