@@ -27,3 +27,19 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 });
+
+// js/common.js
+document.addEventListener('DOMContentLoaded', () => {
+    const path = window.location.pathname;
+    const pageName = path.split('/').pop(); // 예: board.jsp 추출
+
+    const menuItems = document.querySelectorAll('.sidebar-menu .menu-item');
+    menuItems.forEach(item => {
+        // href가 현재 페이지 이름과 일치하면 active 클래스 추가
+        if (item.getAttribute('href') === pageName) {
+            item.classList.add('active');
+        } else {
+            item.classList.remove('active');
+        }
+    });
+});
