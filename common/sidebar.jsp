@@ -137,17 +137,17 @@
             </div>
             <nav class="sidebar-menu">
                 <div class="menu-title">MAIN MENU</div>
-                <a href="main.jsp" class="menu-item <%= currentPage.equals("main.jsp") ? "active" : "" %>"><i
+                <a href="main.jsp" class="menu-item <%= currentPage.equals(" main.jsp") ? "active" : "" %>"><i
                         class="fa-solid fa-house"></i> 홈</a>
-                <a href="club_main.jsp" class="menu-item <%= currentPage.equals("club_main.jsp") ? "active" : "" %>"><i
+                <a href="club_main.jsp" class="menu-item <%= currentPage.equals(" club_main.jsp") ? "active" : "" %>"><i
                         class="fa-solid fa-shield-halved"></i> 공식 동아리</a>
-                <a href="meeting_list.jsp" class="menu-item <%= currentPage.equals("meeting_list.jsp") ? "active" : ""
+                <a href="meeting_list.jsp" class="menu-item <%= currentPage.equals(" meeting_list.jsp") ? "active" : ""
                     %>"><i class="fa-solid fa-user-group"></i> 자율 소모임</a>
-                <a href="map.jsp" class="menu-item <%= currentPage.equals("map.jsp") ? "active" : "" %>"><i
+                <a href="map.jsp" class="menu-item <%= currentPage.equals(" map.jsp") ? "active" : "" %>"><i
                         class="fa-solid fa-map-location-dot"></i> 지도</a>
-                <a href="sos_board.jsp" class="menu-item <%= currentPage.equals("sos_board.jsp") ? "active" : "" %>"><i
+                <a href="board.jsp" class="menu-item <%= currentPage.equals(" board.jsp") ? "active" : "" %>"><i
                         class="fa-solid fa-clipboard-list"></i> 게시판</a>
-                <a href="mypage.jsp" class="menu-item <%= currentPage.equals("mypage.jsp") ? "active" : "" %>"><i
+                <a href="mypage.jsp" class="menu-item <%= currentPage.equals(" mypage.jsp") ? "active" : "" %>"><i
                         class="fa-solid fa-user"></i> MY</a>
             </nav>
         </aside>
@@ -163,3 +163,5 @@
                     sidebar.classList.toggle('collapsed');
                     if (mainWrapper) mainWrapper.classList.toggle('expanded');
                 }
+            }
+        </script>

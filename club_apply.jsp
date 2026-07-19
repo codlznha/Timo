@@ -252,15 +252,6 @@
         <button class="btn-back" onclick="history.back()"><i class="fa-solid fa-arrow-left"></i></button>
         <h1>동아리 가입 신청</h1>
     </header>
-
-    <nav class="top-nav">
-        <a href="club_main.jsp" class="nav-item">동아리</a>
-        <a href="meeting_list.jsp" class="nav-item">모임</a>
-        <a href="club_board.jsp" class="nav-item">작성</a>
-        <a href="map.jsp" class="nav-item">지도</a>
-        <a href="club_apply.jsp" class="nav-item active">가입</a>
-    </nav>
-
     <main class="form-container">
         <div class="club-summary">
             <div class="club-summary-icon">

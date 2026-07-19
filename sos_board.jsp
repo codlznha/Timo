@@ -515,12 +515,6 @@
                     </div>
                 </header>
 
-                <!-- 타이틀 영역 -->
-                <div class="page-header">
-                    <h1>SOS 홍보 게시판</h1>
-                    <p>동아리 행사 홍보, 부원 모집 등 다양한 소식을 공유해보세요.</p>
-                </div>
-
                 <div class="content-container">
 
                     <div class="section-card">
