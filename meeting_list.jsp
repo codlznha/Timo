@@ -674,11 +674,6 @@
             <div class="main-wrapper" id="mainWrapper">
                 <%@ include file="/common/header.jsp" %>
 
-                    <div class="page-header">
-                        <h1>자율 소모임</h1>
-                        <p>관심사가 맞는 학우들과 자유롭게 모임을 만들고 참여해보세요!</p>
-                    </div>
-
                     <div class="content-container">
                         <!-- 상단 컨트롤 영역 -->
                         <div class="board-controls">

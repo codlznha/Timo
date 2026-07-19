@@ -35,12 +35,6 @@
                     </div>
                 </header>
 
-                <!-- 타이틀 영역 -->
-                <div class="page-header">
-                    <h1>공식 동아리</h1>
-                    <p>한국공학대학교 인증 공식 동아리 목록입니다.</p>
-                </div>
-
                 <div class="content-container">
 
                     <!-- 내가 가입한 동아리 -->

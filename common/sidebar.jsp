@@ -141,7 +141,7 @@
         </div>
         <nav class="sidebar-menu">
             <div class="menu-title">MAIN MENU</div>
-            <a href="index.jsp" class="menu-item active"><i class="fa-solid fa-house"></i> 홈</a>
+            <a href="main.jsp" class="menu-item active"><i class="fa-solid fa-house"></i> 홈</a>
             <a href="club_main.jsp" class="menu-item"><i class="fa-solid fa-shield-halved"></i> 공식 동아리</a>
             <a href="meeting_list.jsp" class="menu-item"><i class="fa-solid fa-user-group"></i> 자율 소모임</a>
             <a href="map.jsp" class="menu-item"><i class="fa-solid fa-map-location-dot"></i> 지도</a>
