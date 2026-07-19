@@ -11,6 +11,46 @@
         <link rel="stylesheet" href="css/common.css">
         <link rel="stylesheet" href="css/layout.css">
         <link rel="stylesheet" href="css/components.css">
+        <style>
+            /* 공식 동아리 개설 신청 카드 전용 스타일 */
+            .club-card.add-club-card {
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                justify-content: center;
+                text-align: center;
+                border: 2px dashed #b9c2d8;
+                background-color: #f7f9fc;
+                color: var(--primary-blue, #005baa);
+                min-height: 100%;
+            }
+
+            .club-card.add-club-card:hover {
+                border-color: var(--primary-blue, #005baa);
+                background-color: #eef3fb;
+            }
+
+            .add-club-card .add-icon {
+                width: 50px;
+                height: 50px;
+                border-radius: 50%;
+                background-color: var(--primary-blue, #005baa);
+                color: #fff;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                font-size: 1.3rem;
+                margin-bottom: 12px;
+            }
+
+            .add-club-card .club-name {
+                color: var(--primary-blue, #005baa);
+            }
+
+            .add-club-card .club-desc {
+                color: #6b7690;
+            }
+        </style>
     </head>
 
     <body>
@@ -139,6 +179,14 @@
                                 </div>
                             </div>
 
+                            <!-- 공식 동아리 개설 신청 카드 -->
+                            <div class="club-card add-club-card" data-name="공식 동아리 개설 신청" data-tag="all"
+                                onclick="location.href='add_club.jsp'">
+                                <div class="add-icon"><i class="fa-solid fa-plus"></i></div>
+                                <div class="club-name">공식 동아리 개설 신청</div>
+                                <div class="club-desc">만들고 싶은 동아리가 있나요? 신청서를 작성해보세요.</div>
+                            </div>
+
                         </div>
                     </div>
 
@@ -159,11 +207,19 @@
                 function render() {
                     let cards = [...grid.children];
                     cards.forEach(c => {
+                        // '공식 동아리 개설 신청' 카드는 검색/필터와 무관하게 항상 노출
+                        if (c.classList.contains("add-club-card")) {
+                            c.style.display = "flex";
+                            return;
+                        }
                         const okName = c.dataset.name.toLowerCase().includes(search.value.toLowerCase());
                         const okTag = current === "all" || c.dataset.tag === current;
                         c.style.display = (okName && okTag) ? "flex" : "none";
                     });
                     cards.sort((a, b) => {
+                        // 신청 카드는 항상 맨 뒤에 위치
+                        if (a.classList.contains("add-club-card")) return 1;
+                        if (b.classList.contains("add-club-card")) return -1;
                         return sort.value === "asc" ?
                             a.dataset.name.localeCompare(b.dataset.name, "ko") :
                             b.dataset.name.localeCompare(a.dataset.name, "ko");
