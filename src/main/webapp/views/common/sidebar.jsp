@@ -161,7 +161,7 @@
 		</a>
 
 		<!-- 자율 소모임 -->
-		<a href="${pageContext.request.contextPath}/meet/main"
+		<a href="${pageContext.request.contextPath}/meet/list"
 		   class="menu-item <%= uri.contains("/meet") && !uri.contains("/meet/map") ? "active" : "" %>">
 		    <i class="fa-solid fa-user-group"></i>
 		    자율 소모임

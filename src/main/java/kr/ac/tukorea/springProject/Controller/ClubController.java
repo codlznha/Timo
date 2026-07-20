@@ -38,4 +38,8 @@ public class ClubController {
     	return "club/add_club";
     }
 
+    @RequestMapping("/add_writing")
+    public String addWriting() {
+        return "club/add_writing";
+    }
 }

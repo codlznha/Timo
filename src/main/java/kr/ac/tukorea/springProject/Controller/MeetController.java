@@ -7,11 +7,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @RequestMapping("/meet")
 public class MeetController {
 
-    @RequestMapping("/main")
-    public String meet() {
-        return "meet/meet";
-    }
-
     @RequestMapping("/detail")
     public String meetDetail() {
         return "meet/detail";
