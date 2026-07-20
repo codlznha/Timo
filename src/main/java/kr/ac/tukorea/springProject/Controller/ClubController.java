@@ -32,5 +32,10 @@ public class ClubController {
     public String clubApply() {
         return "club/club_apply";
     }
+    
+    @RequestMapping("/add")
+    public String clubAdd() {
+    	return "club/add_club";
+    }
 
 }

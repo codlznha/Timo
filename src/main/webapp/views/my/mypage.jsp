@@ -779,7 +779,7 @@
                             <div class="empty-state">
                                 <i class="fa-solid fa-ghost"></i>
                                 <p>아직 가입한 공식 동아리가 없습니다.</p>
-                                <button class="btn-action" onclick="location.href='${pageContext.request.contextPath}/club'">동아리 가입하러 가기</button>
+                                <button class="btn-action" onclick="location.href='${pageContext.request.contextPath}/club/main'">동아리 가입하러 가기</button>
                             </div>
                         </div>
                         <div id="tab-club-applied" class="tab-content">

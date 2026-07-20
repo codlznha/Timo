@@ -154,14 +154,14 @@
 		</a>
 
 		<!-- 공식 동아리 -->
-		<a href="${pageContext.request.contextPath}/club"
+		<a href="${pageContext.request.contextPath}/club/main"
 		   class="menu-item <%= uri.contains("/club") ? "active" : "" %>">
 		    <i class="fa-solid fa-shield-halved"></i>
 		    공식 동아리
 		</a>
 
 		<!-- 자율 소모임 -->
-		<a href="${pageContext.request.contextPath}/meet"
+		<a href="${pageContext.request.contextPath}/meet/main"
 		   class="menu-item <%= uri.contains("/meet") && !uri.contains("/meet/map") ? "active" : "" %>">
 		    <i class="fa-solid fa-user-group"></i>
 		    자율 소모임

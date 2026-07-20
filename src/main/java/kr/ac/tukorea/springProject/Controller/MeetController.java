@@ -18,8 +18,8 @@ public class MeetController {
     }
 
     @RequestMapping("/list")
-    public String meetingList() {
-        return "meet/list";
+    public String meetList() {
+        return "meet/meetList";
     }
     
     @RequestMapping("/map")
