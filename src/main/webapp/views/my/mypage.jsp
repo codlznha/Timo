@@ -792,7 +792,7 @@
 
                     <!-- 5. 로그아웃 -->
                     <div class="logout-wrap">
-                        <button class="btn-logout" onclick="alert('로그아웃 되었습니다.'); location.href='${pageContext.request.contextPath}/login';">
+                        <button class="btn-logout" onclick="alert('로그아웃 되었습니다.'); location.href='/my/login';">
                             <i class="fa-solid fa-arrow-right-from-bracket"></i> 로그아웃
                         </button>
                     </div>

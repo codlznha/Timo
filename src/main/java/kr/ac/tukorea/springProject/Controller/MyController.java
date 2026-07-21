@@ -20,14 +20,6 @@ public class MyController {
         return "my/mypage";
     }
 
-    // 로그인 처리
-    @PostMapping("/login")
-    public String loginProcess() {
-
-        // 나중에 DB 로그인 처리
-
-        return "redirect:/my/mypage";
-    }
 
     // 회원가입 처리
     @PostMapping("/signup")

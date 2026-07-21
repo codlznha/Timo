@@ -4,14 +4,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import kr.ac.tukorea.springProject.service.memberService;
+import kr.ac.tukorea.springProject.service.MemberService;
 
 @Controller
 @RequestMapping("/club")
 public class ClubController {
 
     @Autowired
-    private memberService memService;
+    private MemberService MemService;
 
     @RequestMapping("/main")
     public String clubMain() {

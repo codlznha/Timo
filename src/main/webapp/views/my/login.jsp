@@ -384,13 +384,18 @@
                     <div class="input-group">
                         <label>학교 이메일 (학번)</label>
                         <i class="fa-regular fa-envelope input-icon"></i>
-                        <input type="text" class="input-control" name="studentId" placeholder="학번 입력" required>
+                        <input type="text" class="input-control" name="id" placeholder="아이디(학번)">
                     </div>
 
                     <div class="input-group">
                         <label>비밀번호</label>
                         <i class="fa-solid fa-lock input-icon"></i>
-                        <input type="password" class="input-control" name="userPw" placeholder="비밀번호 입력" required>
+						<input
+						    type="password"
+						    class="input-control"
+						    name="pwd"
+						    placeholder="비밀번호 입력"
+						    required>
                     </div>
 
                     <button type="submit" class="btn-submit">로그인</button>
@@ -405,11 +410,10 @@
 				      action="${pageContext.request.contextPath}/member/signup" 
 				      method="post"
 				      onsubmit="return validateSignup();">
-                    onsubmit="return validateSignup();">
                     <div class="input-group">
                         <label>이름 <span>*</span></label>
                         <i class="fa-regular fa-user input-icon"></i>
-                        <input type="text" class="input-control" name="userName" placeholder="실명 입력" required>
+                        <input type="text" class="input-control" name="name" placeholder="실명 입력" required>
                     </div>
 
                     <!-- 🌟 검색 가능한 드롭다운 (소속 학과) 🌟 -->
@@ -420,7 +424,7 @@
                             autocomplete="off" required>
 
                         <!-- 폼 전송 시 실제 데이터가 담길 Hidden Input -->
-                        <input type="hidden" name="userDept" id="hiddenDeptValue" required>
+                        <input type="hidden" id="hiddenDeptValue">
 
                         <!-- 동적 그룹화 드롭다운 리스트 -->
                         <ul class="dropdown-list" id="deptDropdown"></ul>
@@ -429,23 +433,42 @@
                     <div class="input-group">
                         <label>학교 이메일 (학번) <span>*</span></label>
                         <div class="email-group">
-                            <input type="text" class="input-control" name="studentId" placeholder="학번 입력" required>
+							<input
+							    type="text"
+							    class="input-control"
+							    name="id"
+							    placeholder="학번 입력"
+							    required>
                             <span class="email-domain">@tukorea.ac.kr</span>
                         </div>
                     </div>
+					
+					<div class="input-group">
+					    <label>학교 이메일 <span>*</span></label>
+					    <i class="fa-regular fa-envelope input-icon"></i>
+					    <input
+					        type="email"
+					        class="input-control"
+					        name="email"
+					        placeholder="학교 이메일 입력"
+					        required>
+					</div>
 
                     <div class="input-group">
                         <label>비밀번호 <span>*</span></label>
                         <i class="fa-solid fa-lock input-icon"></i>
-                        <input type="password" id="signupPw" class="input-control" name="userPw"
+                        <input type="password" id="signupPw" class="input-control" name="pwd"
                             placeholder="8자 이상 영문, 숫자 조합" required>
                     </div>
 
                     <div class="input-group">
                         <label>비밀번호 확인 <span>*</span></label>
                         <i class="fa-solid fa-circle-check input-icon"></i>
-                        <input type="password" id="signupPwConfirm" class="input-control" placeholder="비밀번호 다시 입력"
-                            required>
+                        <input
+							type="password" 
+							id="signupPwConfirm"
+							class="input-control"
+							placeholder="비밀번호 다시 입력">
                     </div>
 
                     <button type="submit" class="btn-submit">가입하기</button>
@@ -559,13 +582,6 @@
                 const hiddenDeptVal = document.getElementById('hiddenDeptValue').value;
                 const pw = document.getElementById('signupPw').value;
                 const pwConfirm = document.getElementById('signupPwConfirm').value;
-
-                // 학과 선택 여부 확인
-                if (!hiddenDeptVal) {
-                    alert('목록에서 소속 학과를 정확히 선택해주세요.');
-                    searchInput.focus();
-                    return false;
-                }
 
                 // 비밀번호 일치 확인
                 if (pw !== pwConfirm) {
