@@ -6,6 +6,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>티모(Timo) - 동아리 상세페이지</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+	
+	<link rel="stylesheet" href="${pageContext.request.contextPath}/css/common.css">
+	<link rel="stylesheet" href="${pageContext.request.contextPath}/css/layout.css">
+	<link rel="stylesheet" href="${pageContext.request.contextPath}/css/components.css">
+	
     <style>
         /* CSS Variables - 학교 메인 컬러 및 테마 */
         :root {
@@ -41,8 +46,15 @@
         .cover-image {
             width: 100%;
             height: 250px;
-            background: linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.3)), url('https://via.placeholder.com/1200x300/005baa/ffffff?text=Club+Cover+Image') center/cover;
+            background-image: url('/img/tino_bg.png');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
             position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
         }
 
         .club-info-wrap {
@@ -186,6 +198,16 @@
             padding: 10px 0;
             border-bottom: 1px solid var(--border-color);
             font-size: 0.9rem;
+        }
+
+        .qna-list li {
+            cursor: pointer;
+            transition: color 0.2s;
+        }
+
+        .qna-list li:hover {
+            color: var(--primary-blue);
+            font-weight: bold;
         }
 
 
@@ -646,11 +668,10 @@
                 <p class="club-desc">한국공학대학교 공식 웹/앱 서비스 개발 동아리입니다. 함께 성장할 학우들을 모집합니다!</p>
             </div>
             <div class="header-btn-group">
-                <button class="btn-write" onclick="location.href='add_writing.jsp?clubId=1&amp;board=notice'">글쓰기</button>
-				<button class="btn-join"
-				    onclick="location.href='${pageContext.request.contextPath}/club/apply'">
-				    가입 신청하기
+				<button class="btn-write" onclick="location.href='/club/add_writing?clubId=1&board=notice'">
+				글쓰기
 				</button>
+                <button class="btn-join" onclick="location.href='/club/apply'">가입 신청하기</button>
             </div>
         </div>
     </header>
@@ -676,9 +697,9 @@
             </div>
 
             <div class="card">
-                <h3><i class="fa-solid fa-check-to-slot"></i> 진행 중인 투표</h3>
-                <ul class="poll-list">
-                    <li>1학기 종강 파티 장소 선정 (진행중)</li>
+                <h3><i class="fa-solid fa-circle-question"></i> Q&amp;A</h3>
+                <ul class="poll-list qna-list">
+                    <li onclick="location.href='/club/club_QA'">궁금한점 물어보기</li>
                 </ul>
             </div>
         </aside>

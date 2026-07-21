@@ -231,7 +231,7 @@
 <body>
 
     <header class="page-header">
-        <button class="btn-back" onclick="location.href='${pageContext.request.contextPath}/club/detail?clubId=<%= clubIdSafe %>'">
+        <button class="btn-back" onclick="location.href='/club/detail?clubId=<%= clubIdSafe %>'">
             <i class="fa-solid fa-arrow-left"></i>
         </button>
         <h2>게시글 작성</h2>

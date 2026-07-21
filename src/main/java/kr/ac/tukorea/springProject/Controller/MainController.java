@@ -16,4 +16,9 @@ public class MainController {
     public String board() {
         return "main/board";
     }
+    
+    @RequestMapping("/sos")
+    public String mainSos() {
+    	return "main/sos_board";
+    }
 }

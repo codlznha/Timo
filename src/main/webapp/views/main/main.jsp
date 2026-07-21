@@ -542,7 +542,7 @@
                         <div class="card">
                             <div class="card-title">
                                 SOS 홍보 게시판
-                                <a href="/sos">더보기 ></a>
+                                <a href="${pageContext.request.contextPath}/main/sos">더보기 ></a>
                             </div>
                             <div class="sos-list">
                                 <div class="sos-item">

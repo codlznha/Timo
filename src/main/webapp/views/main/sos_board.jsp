@@ -411,6 +411,40 @@
                 resize: none;
             }
 
+            /* 익명 체크박스 */
+            .anon-checkbox {
+                display: flex !important;
+                align-items: center;
+                gap: 6px;
+                margin-top: 10px;
+                font-size: 0.9rem;
+                font-weight: 500;
+                color: var(--text-gray);
+                cursor: pointer;
+            }
+
+            .anon-checkbox input[type="checkbox"] {
+                width: auto;
+                padding: 0;
+                cursor: pointer;
+            }
+
+            .form-group input:disabled {
+                background-color: var(--bg-color);
+                color: var(--text-gray);
+                cursor: not-allowed;
+            }
+
+            /* 익명 뱃지 (동아리명 자리에 표시) */
+            .sos-club-name.is-anonymous {
+                color: var(--text-gray);
+                font-style: italic;
+            }
+
+            .sos-club-name.is-anonymous i {
+                margin-right: 4px;
+            }
+
             .btn-submit {
                 width: 100%;
                 padding: 15px;
@@ -623,7 +657,11 @@
                         </div>
                         <div class="form-group">
                             <label>동아리명</label>
-                            <input type="text" placeholder="작성할 동아리명을 입력하세요 (예: Timo)" required>
+                            <input type="text" id="writeClubInput" placeholder="작성할 동아리명을 입력하세요 (예: Timo)" required>
+                            <label class="anon-checkbox">
+                                <input type="checkbox" id="anonCheckbox" onchange="toggleAnonymous()">
+                                <span>익명으로 작성하기</span>
+                            </label>
                         </div>
                         <div class="form-group">
                             <label>제목</label>
@@ -670,12 +708,12 @@
             <script>
                 // 1. 카테고리 필터 및 검색 기능 연동
                 const tags = document.querySelectorAll('#categoryTags .tag');
-                const listItems = document.querySelectorAll('#sosList .sos-item');
                 const searchInput = document.getElementById('searchInput');
                 let currentTag = 'all';
 
                 function filterList() {
                     const keyword = searchInput.value.toLowerCase();
+                    const listItems = document.querySelectorAll('#sosList .sos-item');
 
                     listItems.forEach(item => {
                         const tag = item.getAttribute('data-tag');
@@ -708,12 +746,95 @@
 
                 // 2. 글쓰기 팝업 제어
                 function openWriteModal() { document.getElementById('writeModal').classList.add('show'); }
-                function closeWriteModal() { document.getElementById('writeModal').classList.remove('show'); }
+                function closeWriteModal() {
+                    document.getElementById('writeModal').classList.remove('show');
+                    document.querySelector('#writeModal form').reset();
+                    resetAnonymousState();
+                }
+
+                // 익명 체크 시 동아리명 입력란 잠금 처리
+                function toggleAnonymous() {
+                    const isAnon = document.getElementById('anonCheckbox').checked;
+                    const clubInput = document.getElementById('writeClubInput');
+
+                    if (isAnon) {
+                        clubInput.dataset.prevValue = clubInput.value;
+                        clubInput.value = '익명';
+                        clubInput.disabled = true;
+                        clubInput.required = false;
+                    } else {
+                        clubInput.disabled = false;
+                        clubInput.required = true;
+                        clubInput.value = clubInput.dataset.prevValue || '';
+                    }
+                }
+
+                function resetAnonymousState() {
+                    const anonCheckbox = document.getElementById('anonCheckbox');
+                    const clubInput = document.getElementById('writeClubInput');
+                    anonCheckbox.checked = false;
+                    clubInput.disabled = false;
+                    clubInput.required = true;
+                }
 
                 function submitPost(e) {
                     e.preventDefault();
+
+                    const form = e.target;
+                    const badgeType = form.querySelector('select').value;
+                    const isAnon = document.getElementById('anonCheckbox').checked;
+                    const club = isAnon ? '익명' : document.getElementById('writeClubInput').value;
+                    const title = form.querySelectorAll('input[type="text"]')[1].value;
+                    const content = form.querySelector('textarea').value;
+                    const today = new Date();
+                    const date = today.getFullYear() + '.' +
+                        String(today.getMonth() + 1).padStart(2, '0') + '.' +
+                        String(today.getDate()).padStart(2, '0');
+
+                    addPostToList(badgeType, club, date, title, content, isAnon);
+
                     alert('게시글이 성공적으로 등록되었습니다.');
                     closeWriteModal();
+                }
+
+                // 새 게시글을 목록 최상단에 추가
+                function addPostToList(badgeType, club, date, title, content, isAnon) {
+                    const list = document.getElementById('sosList');
+                    const badgeClass = badgeType === '홍보' ? 'badge-promo'
+                        : badgeType === '모집중' ? 'badge-recruit' : 'badge-etc';
+                    const preview = content.length > 60 ? content.substring(0, 60) + '...' : content;
+                    const anonIconHtml = isAnon ? '<i class="fa-solid fa-user-secret"></i>' : '';
+                    const clubClass = 'sos-club-name' + (isAnon ? ' is-anonymous' : '');
+
+                    const item = document.createElement('div');
+                    item.className = 'sos-item';
+                    item.setAttribute('data-tag', badgeType);
+                    item.setAttribute('data-title', title);
+                    item.setAttribute('data-club', club);
+
+                    // 클릭 시 상세보기가 열리도록 이벤트를 직접 바인딩 (문자열 조립 대신 클로저 사용)
+                    item.addEventListener('click', function () {
+                        openViewModal(badgeType, club, date, title, content);
+                    });
+
+                    const headerDiv = document.createElement('div');
+                    headerDiv.className = 'sos-item-header';
+                    headerDiv.innerHTML =
+                        '<span class="sos-badge ' + badgeClass + '">' + badgeType + '</span>' +
+                        '<span class="' + clubClass + '">' + anonIconHtml + club + '</span>' +
+                        '<span class="sos-date">' + date + '</span>';
+
+                    const titleEl = document.createElement('h3');
+                    titleEl.textContent = title;
+
+                    const previewEl = document.createElement('p');
+                    previewEl.textContent = preview;
+
+                    item.appendChild(headerDiv);
+                    item.appendChild(titleEl);
+                    item.appendChild(previewEl);
+
+                    list.insertBefore(item, list.firstChild);
                 }
 
                 // 3. 게시글 상세보기 팝업 제어
@@ -727,7 +848,10 @@
                     else if (badgeType === '모집중') badgeSpan.classList.add('badge-recruit');
                     else if (badgeType === '기타') badgeSpan.classList.add('badge-etc');
 
-                    document.getElementById('viewClub').innerText = club;
+                    const viewClubSpan = document.getElementById('viewClub');
+                    const isAnon = (club === '익명');
+                    viewClubSpan.innerHTML = isAnon ? '<i class="fa-solid fa-user-secret"></i> ' + club : club;
+                    viewClubSpan.classList.toggle('is-anonymous', isAnon);
                     document.getElementById('viewDate').innerText = date;
                     document.getElementById('viewTitle').innerText = title;
                     document.getElementById('viewContent').innerText = content;
