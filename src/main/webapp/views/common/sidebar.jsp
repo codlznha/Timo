@@ -136,7 +136,7 @@
             <i class="fa-solid fa-user"></i>
         </div>
         <div class="profile-name">
-            이한국 님
+            ${loginUser.name}님
         </div>
     </div>
 

@@ -2,8 +2,11 @@ package kr.ac.tukorea.springProject.Controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import kr.ac.tukorea.springProject.dto.ClubDTO;
+import kr.ac.tukorea.springProject.service.MainService;
 import kr.ac.tukorea.springProject.service.MemberService;
 
 @Controller
@@ -11,7 +14,10 @@ import kr.ac.tukorea.springProject.service.MemberService;
 public class ClubController {
 
     @Autowired
-    private MemberService MemService;
+    private MemberService memService;
+    
+    @Autowired
+    private MainService mainserivce;
 
     @RequestMapping("/main")
     public String clubMain() {
@@ -19,7 +25,12 @@ public class ClubController {
     }
 
     @RequestMapping("/detail")
-    public String clubDetail() {
+    public String clubDetail(String id, Model model) {
+
+        ClubDTO club = mainserivce.clubDetail(id);
+
+        model.addAttribute("club", club);
+
         return "club/club_detail";
     }
 

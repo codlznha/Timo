@@ -1,4 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
+
 <style>
     .cal-header { display:flex; justify-content:space-between; align-items:center; margin-bottom:15px; font-weight:bold; }
     .cal-header button { background:none; border:none; cursor:pointer; color:var(--text-gray); font-size:1rem; }
@@ -46,23 +49,26 @@
     let calViewMonth = CAL_TODAY.getMonth(); // 0-based
     let calSelectedDate = null;
 
-    // ===== 일정 데이터 (임시: localStorage) =====
-    // TODO: 실제 서비스에서는 아래 두 함수를 서버 API(fetch) 호출로 교체하세요.
-    //   getEvents(year, month)  -> GET  /api/schedule?year=..&month=..
-    //   saveEvent(dateKey, txt) -> POST /api/schedule  { date: dateKey, content: txt }
-    function calLoadEvents() {
-        return JSON.parse(localStorage.getItem('timo_schedule_events') || '{}');
-    }
-    function calStoreEvents(events) {
-        localStorage.setItem('timo_schedule_events', JSON.stringify(events));
-    }
+	const events = {};
+
+	<c:forEach var="sch" items="${scheduleList}">
+	(function(){
+	    const raw = "${sch.scheduleDate}";
+	    const date = raw.substring(0,10);
+
+	    if(!events[date]){
+	        events[date] = [];
+	    }
+
+	    events[date].push("${fn:escapeXml(sch.title)}");
+	})();
+	</c:forEach>
 
     function calDateKey(y, m, d) {
         return y + '-' + String(m + 1).padStart(2, '0') + '-' + String(d).padStart(2, '0');
     }
 
     function calRender() {
-        const events = calLoadEvents();
         document.getElementById('calTitle').innerText =
             calViewYear + '. ' + String(calViewMonth + 1).padStart(2, '0');
 
@@ -115,9 +121,8 @@
     function openCalModal(dateKey) {
         calSelectedDate = dateKey;
         const [y, m, d] = dateKey.split('-');
-        document.getElementById('calModalTitle').innerText = `${y}. ${m}. ${d} 일정`;
+        document.getElementById('calModalTitle').innerText = y + '. ' + m + '. ' + d + ' 일정';
 
-        const events = calLoadEvents();
         const list = document.getElementById('calModalList');
         list.innerHTML = '';
         const dayEvents = events[dateKey] || [];
@@ -125,41 +130,117 @@
         if (dayEvents.length === 0) {
             list.innerHTML = '<li style="color:var(--text-gray); font-size:0.9rem;">등록된 일정이 없습니다.</li>';
         } else {
-            dayEvents.forEach(txt => {
-                const li = document.createElement('li');
-                li.style.padding = '6px 0';
-                li.style.borderBottom = '1px solid var(--border-color)';
-                li.innerText = txt;
-                list.appendChild(li);
-            });
+			dayEvents.forEach((txt, index) => {
+
+			    const li = document.createElement('li');
+			    li.style.display = "flex";
+			    li.style.justifyContent = "space-between";
+			    li.style.alignItems = "center";
+			    li.style.padding = "8px 0";
+			    li.style.borderBottom = "1px solid var(--border-color)";
+
+			    const span = document.createElement("span");
+			    span.innerText = txt;
+
+			    const btn = document.createElement("button");
+			    btn.innerText = "삭제";
+			    btn.style.background = "#dc3545";
+			    btn.style.color = "white";
+			    btn.style.border = "none";
+			    btn.style.borderRadius = "5px";
+			    btn.style.padding = "4px 10px";
+			    btn.style.cursor = "pointer";
+
+			    btn.onclick = () => deleteSchedule(dateKey, txt);
+
+			    li.appendChild(span);
+			    li.appendChild(btn);
+
+			    list.appendChild(li);
+			});
         }
 
         document.getElementById('calNewSchedule').value = '';
         document.getElementById('calModal').classList.add('show');
     }
+	
+	function deleteSchedule(date, title){
+
+	    if(!confirm("삭제하시겠습니까?")){
+	        return;
+	    }
+
+	    fetch("/schedule/delete",{
+
+	        method:"POST",
+
+	        headers:{
+	            "Content-Type":"application/json"
+	        },
+
+	        body:JSON.stringify({
+
+	            scheduleDate:date,
+	            title:title
+
+	        })
+
+	    })
+	    .then(res=>res.text())
+	    .then(()=>{
+
+	        events[date]=events[date].filter(e=>e!==title);
+
+	        if(events[date].length===0){
+	            delete events[date];
+	        }
+
+	        openCalModal(date);
+	        calRender();
+
+	    });
+
+	}
 
     function closeCalModal() {
         document.getElementById('calModal').classList.remove('show');
         calSelectedDate = null;
     }
 
-    function calSaveSchedule() {
-        const input = document.getElementById('calNewSchedule');
-        const txt = input.value.trim();
-        if (!txt) { alert('일정 내용을 입력해주세요.'); return; }
+	function calSaveSchedule() {
+	    const input = document.getElementById('calNewSchedule');
+	    const txt = input.value.trim();
 
-        const events = calLoadEvents();
-        if (!events[calSelectedDate]) events[calSelectedDate] = [];
-        events[calSelectedDate].push(txt);
-        calStoreEvents(events);
+	    if (!txt) {
+	        alert('일정 내용을 입력해주세요.');
+	        return;
+	    }
 
-        closeCalModal();
-        calRender(); // has-event 표시 갱신
-    }
+	    fetch('/schedule/add', {
+	        method: 'POST',
+	        headers: {
+	            'Content-Type': 'application/json'
+	        },
+			body: JSON.stringify({
+			    scheduleDate: calSelectedDate,
+			    title: txt
+			})
+	    })
+		.then(() => {
+		    events[calSelectedDate] = events[calSelectedDate] || [];
+		    events[calSelectedDate].push(txt);
+
+		    closeCalModal();
+		    calRender();
+		})
+	}
 
     window.addEventListener('click', function (event) {
         if (event.target === document.getElementById('calModal')) closeCalModal();
     });
 
-    calRender();
+	document.addEventListener("DOMContentLoaded", function () {
+	    calRender();
+	});
+	
 </script>

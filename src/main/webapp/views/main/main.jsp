@@ -1,4 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+
 <!DOCTYPE html>
 <html lang="ko">
 
@@ -412,7 +414,6 @@
     <%@ include file="/views/common/sidebar.jsp" %>
 
         <div class="main-wrapper" id="mainWrapper">
-
             <header class="top-header">
                 <div class="header-left">
                     <button class="btn-toggle" onclick="toggleSidebar()"><i class="fa-solid fa-bars"></i></button>
@@ -435,41 +436,32 @@
                         <span style="color: #d32f2f;"><i class="fa-solid fa-bullhorn"></i> 공지사항</span>
                         <button onclick="openNoticeModal()">더보기 ></button>
                     </div>
-                    <ul class="notice-list">
-                        <li>
-                            <span><span class="notice-label">[필독]</span>2026학년도 2학기 동아리 등록 기간 안내</span>
-                            <span style="color: var(--text-gray); font-size: 0.8rem;">07.16</span>
-                        </li>
-                        <li>
-                            <span><span class="notice-label">[점검]</span>서버 안정화 작업 공지 (이번주 일요일 02:00)</span>
-                            <span style="color: var(--text-gray); font-size: 0.8rem;">07.15</span>
-                        </li>
+					<ul class="notice-list">
+					    <c:forEach var="notice" items="${noticeList}" begin="0" end="2">
+					        <li>
+					            <span class="notice-label">공지</span>
+					            <span>${notice.title}</span>
+					        </li>
+					    </c:forEach>
+					</ul>
                     </ul>
                 </div>
 
                 <div class="left-col">
                     <!-- 내 동아리 -->
-                    <div class="card">
-                        <div class="card-title">내 동아리</div>
-                        <div class="my-clubs-wrap" id="myClubsList">
-                            <a href="/club/main" class="club-item">
-                                <img src="${pageContext.request.contextPath}/img/tino.png" alt="Timo">
-                                <h4>웹개발 Timo</h4>
-                            </a>
-                            <a href="/club/main" class="club-item">
-                                <img src="${pageContext.request.contextPath}/img/tino.png" alt="ROBOTIS">
-                                <h4>ROBOTIS</h4>
-                            </a>
-                            <a href="/club/main" class="club-item">
-                                <img src="${pageContext.request.contextPath}/img/tino.png" alt="Smash">
-                                <h4>스매싱</h4>
-                            </a>
-                            <a href="/club/main" class="club-item">
-                                <img src="${pageContext.request.contextPath}/img/tino.png" alt="Band">
-                                <h4>음표</h4>
-                            </a>
-                        </div>
-                    </div>
+					<div class="card">
+					    <div class="card-title">내 동아리</div>
+
+					    <div class="my-clubs-wrap">
+					        <c:forEach var="club" items="${clubList}">
+								<a href="${pageContext.request.contextPath}/club/detail?id=${club.id}"
+								   class="club-item">
+					                <img src="/img/tino.png" alt="동아리">
+					                <h4>${club.id}</h4>
+					            </a>
+					        </c:forEach>
+					    </div>
+					</div>
 
                     <!-- SOS 홍보 게시판 -->
                     <div class="card">
@@ -504,22 +496,32 @@
                         <!-- 투두리스트 -->
                         <div class="card">
                             <div class="card-title">투두리스트</div>
-                            <div class="todo-container">
-                                <label class="todo-item"><input type="checkbox"> <span class="todo-text">데이터베이스 모델링
-                                        과제</span></label>
-                                <label class="todo-item"><input type="checkbox" checked> <span class="todo-text">UI 디자인
-                                        수정하기</span></label>
-                                <label class="todo-item"><input type="checkbox"> <span class="todo-text">동아리 회비 입금
-                                        (23일)</span></label>
-                                <label class="todo-item"><input type="checkbox"> <span class="todo-text">자바 프로그래밍
-                                        복습</span></label>
-                                <label class="todo-item"><input type="checkbox"> <span class="todo-text">Timo 프로젝트 회의
-                                        준비</span></label>
-                            </div>
-                            <div class="add-todo">
-                                <input type="text" placeholder="할 일 입력...">
-                                <button><i class="fa-solid fa-plus"></i></button>
-                            </div>
+							<div class="todo-container">
+								<c:forEach var="todo" items="${todoList}">
+								    <label class="todo-item">
+								        <input type="checkbox"
+								               data-id="${todo.id}"
+								               ${todo.done ? "checked" : ""}
+								               onchange="updateTodo(this)">
+								        <span class="todo-text">${todo.content}</span>
+								    </label>
+								</c:forEach>
+							</div>
+							<form action="${pageContext.request.contextPath}/todo/add"
+							      method="post"
+							      class="add-todo">
+
+							    <input
+							        type="text"
+							        name="content"
+							        placeholder="할 일 입력..."
+							        required>
+
+							    <button type="submit">
+							        <i class="fa-solid fa-plus"></i>
+							    </button>
+
+							</form>
                         </div>
                 </div>
             </div>
@@ -555,20 +557,32 @@
                 <div class="modal-header">전체 공지사항<button class="btn-close" onclick="closeNoticeModal()"><i
                             class="fa-solid fa-xmark"></i></button></div>
                 <ul class="notice-list" style="margin-bottom: 20px;">
-                    <li style="border-bottom: 1px solid var(--border-color); padding: 10px 0;"><span><span
-                                class="notice-label">[필독]</span>2학기 동아리 등록 안내</span></li>
-                    <li style="border-bottom: 1px solid var(--border-color); padding: 10px 0;"><span><span
-                                class="notice-label">[점검]</span>서버 안정화 작업 공지</span></li>
-                    <li style="border-bottom: 1px solid var(--border-color); padding: 10px 0;"><span><span
-                                class="notice-label">[행사]</span>교내 해커톤 대회 개최</span></li>
-                    <li style="border-bottom: 1px solid var(--border-color); padding: 10px 0;"><span><span
-                                class="notice-label">[일반]</span>여름방학 에어컨 가동 시간 안내</span></li>
+					<c:forEach var="notice" items="${noticeList}">
+					        <li>
+					            <span>${notice.title}</span>
+					            <span>${notice.content}</span>
+					        </li>
+					    </c:forEach>
                 </ul>
             </div>
         </div>
 
         <!-- 메인 페이지 전용 동작 스크립트 (검색, 공지 모달만 — 캘린더 로직은 calendar.jsp로 이동) -->
         <script>
+			function updateTodo(cb){
+
+			    fetch("/todo/update",{
+			        method:"POST",
+			        headers:{
+			            "Content-Type":"application/x-www-form-urlencoded"
+			        },
+			        body:
+			            "id="+cb.dataset.id+
+			            "&done="+cb.checked
+			    });
+
+			}
+			
             function searchClub(event) {
                 event.preventDefault();
                 const keyword = document.getElementById('searchInput').value;

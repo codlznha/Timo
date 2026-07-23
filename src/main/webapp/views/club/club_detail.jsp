@@ -42,6 +42,32 @@
             border-bottom: 1px solid var(--border-color);
             padding-bottom: 20px;
         }
+		
+		.back-area {
+		    max-width: 1100px;
+		    margin: 0 auto;
+		    padding: 20px 20px 0;
+		}
+
+		.btn-back {
+		    display: inline-flex;
+		    align-items: center;
+		    gap: 8px;
+		    background: var(--white);
+		    color: var(--primary-blue);
+		    border: 1px solid var(--border-color);
+		    border-radius: 8px;
+		    padding: 10px 18px;
+		    font-size: 0.9rem;
+		    font-weight: bold;
+		    cursor: pointer;
+		    transition: 0.2s;
+		}
+
+		.btn-back:hover {
+		    background: var(--primary-blue);
+		    color: var(--white);
+		}
 
         .cover-image {
             width: 100%;
@@ -657,7 +683,7 @@
 <body>
 
     <header class="club-header">
-        <div class="cover-image"></div>
+		<div class="cover-image"></div>
         <div class="club-info-wrap">
             <div class="club-logo">
                 <i class="fa-solid fa-code"></i>
@@ -674,6 +700,12 @@
                 <button class="btn-join" onclick="location.href='/club/apply'">가입 신청하기</button>
             </div>
         </div>
+		<div class="back-area">
+				        <button class="btn-back" onclick="history.back()">
+				            <i class="fa-solid fa-arrow-left"></i>
+				            뒤로가기
+				        </button>
+				    </div>
     </header>
 
     <div class="container">
