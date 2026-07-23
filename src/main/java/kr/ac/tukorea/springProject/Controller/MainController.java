@@ -32,6 +32,9 @@ public class MainController {
 		if (loginUser == null) {
 			return "redirect:/my/login"; // 로그인 페이지 경로
 		}
+		if ("관리자".equals(loginUser.getName())) {
+			return "redirect:/admin/sidebar"; // 로그인 페이지 경로
+		}
 
 		model.addAttribute("user", loginUser);
 

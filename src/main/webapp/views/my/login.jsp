@@ -379,7 +379,7 @@
 
                 <!-- 로그인 폼 -->
 				<form id="loginForm" class="form-section active" 
-				      action="${pageContext.request.contextPath}/member/login" 
+				      action="${pageContext.request.contextPath}/my/login"
 				      method="post">
                     <div class="input-group">
                         <label>학교 이메일 (학번)</label>
@@ -407,7 +407,7 @@
 
                 <!-- 회원가입 폼 -->
 				<form id="signupForm" class="form-section" 
-				      action="${pageContext.request.contextPath}/member/signup" 
+				      action="${pageContext.request.contextPath}/my/signup" 
 				      method="post"
 				      onsubmit="return validateSignup();">
                     <div class="input-group">
