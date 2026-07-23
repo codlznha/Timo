@@ -1,4 +1,5 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
     <!DOCTYPE html>
     <html lang="ko">
 
@@ -211,6 +212,10 @@
 
             .bg-taxi {
                 background: linear-gradient(135deg, #f6d365 0%, #fda085 100%);
+            }
+
+            .bg-etc {
+                background: linear-gradient(135deg, #a1c4fd 0%, #c2e9fb 100%);
             }
 
             .status-badge {
@@ -708,63 +713,47 @@
                         </div>
 
                         <!-- 모임 카드 그리드 -->
-                        <div class="meeting-grid">
-                            <div class="meeting-card"
-                                onclick="openJoinModal('식사', '정문 앞 점심 식사 파티구함', '2', '4', '2026-07-18 11:00', '지갑', '정문 앞 맘스터치', '혼밥하기 싫어서 올립니다. 같이 햄버거 세트 드실 분 구해요!')">
-                                <div class="card-img bg-meal"><span class="status-badge">모집중</span><i
-                                        class="fa-solid fa-utensils"></i></div>
-                                <div class="card-content">
-                                    <div class="card-title">[식사] 정문 앞 점심 식사 파티구함</div>
-                                    <div class="card-info"><span><i class="fa-solid fa-location-dot"></i> 정문 앞
-                                            맘스터치</span><span><i class="fa-regular fa-clock"></i> 2026-07-18 11:00</span>
-                                    </div>
-                                    <div class="card-footer"><span><i class="fa-solid fa-box-open"></i> 지갑</span><span
-                                            class="people-count">2 / 4명</span></div>
-                                </div>
-                            </div>
+						<!-- 모임 카드 그리드 -->
+						<div class="meeting-grid">
+						    <c:forEach var="meet" items="${meetList}">
+						        <!-- 타입별 카드 색상 및 아이콘 설정 -->
+						        <c:set var="bgClass" value="bg-meal" />
+						        <c:set var="iconClass" value="fa-utensils" />
+								<c:if test="${meet.type == '게임'}"><c:set var="bgClass" value="bg-game"/><c:set var="iconClass" value="fa-gamepad"/></c:if>
+								<c:if test="${meet.type == '운동'}"><c:set var="bgClass" value="bg-sports"/><c:set var="iconClass" value="fa-basketball"/></c:if>
+								<c:if test="${meet.type == '택시'}"><c:set var="bgClass" value="bg-taxi"/><c:set var="iconClass" value="fa-taxi"/></c:if>
+								<c:if test="${meet.type == '공부'}"><c:set var="bgClass" value="bg-study"/><c:set var="iconClass" value="fa-book"/></c:if>
+								<c:if test="${meet.type == '기타'}"><c:set var="bgClass" value="bg-etc"/><c:set var="iconClass" value="fa-ellipsis"/></c:if>
 
-                            <div class="meeting-card"
-                                onclick="openJoinModal('게임', 'PC방 5인큐, 지금 당장!', '4', '5', '2026-07-18 13:00', '피시방비', 'E동 앞 제우스 PC방', '롤 5인큐 하실 분! 현재 4명 대기중입니다. 즐겜 유저 환영해요.')">
-                                <div class="card-img bg-game"><span class="status-badge status-urgent">마감임박</span><i
-                                        class="fa-solid fa-gamepad"></i></div>
-                                <div class="card-content">
-                                    <div class="card-title">[게임] PC방 5인큐, 지금 당장!</div>
-                                    <div class="card-info"><span><i class="fa-solid fa-location-dot"></i> E동 앞 제우스
-                                            PC방</span><span><i class="fa-regular fa-clock"></i> 2026-07-18 13:00</span>
-                                    </div>
-                                    <div class="card-footer"><span><i class="fa-solid fa-box-open"></i> 피시방비</span><span
-                                            class="people-count">4 / 5명</span></div>
-                                </div>
-                            </div>
-
-                            <div class="meeting-card"
-                                onclick="openJoinModal('운동', 'TU 체육관 농구 한 판 할 사람', '3', '5', '2026-07-18 18:00', '운동화, 물', 'TU 체육관 야외 코트', '다들 오랜만에 농구 어떠세요? 공은 제가 챙길게요!')">
-                                <div class="card-img bg-sports"><span class="status-badge">모집중</span><i
-                                        class="fa-solid fa-basketball"></i></div>
-                                <div class="card-content">
-                                    <div class="card-title">[운동] TU 체육관 농구 한 판 할 사람</div>
-                                    <div class="card-info"><span><i class="fa-solid fa-location-dot"></i> TU 체육관 야외
-                                            코트</span><span><i class="fa-regular fa-clock"></i> 2026-07-18 18:00</span>
-                                    </div>
-                                    <div class="card-footer"><span><i class="fa-solid fa-box-open"></i> 운동화,
-                                            물</span><span class="people-count">3 / 5명</span></div>
-                                </div>
-                            </div>
-
-                            <div class="meeting-card"
-                                onclick="openJoinModal('택시', '정왕역으로 택시 같이 타실 분', '1', '4', '2026-07-19 15:30', '택시비 N빵', '정문 대리석 앞', '비와서 버스 타기 힘드네요. 택시비 N빵 하실 분 3분 구합니다.')">
-                                <div class="card-img bg-taxi"><span class="status-badge">모집중</span><i
-                                        class="fa-solid fa-taxi"></i></div>
-                                <div class="card-content">
-                                    <div class="card-title">[택시] 정왕역으로 택시 같이 타실 분</div>
-                                    <div class="card-info"><span><i class="fa-solid fa-location-dot"></i> 정문 대리석
-                                            앞</span><span><i class="fa-regular fa-clock"></i> 2026-07-19 15:30</span>
-                                    </div>
-                                    <div class="card-footer"><span><i class="fa-solid fa-box-open"></i> 택시비
-                                            N빵</span><span class="people-count">1 / 4명</span></div>
-                                </div>
-                            </div>
-                        </div>
+						        <div class="meeting-card"
+						            data-type="<c:out value="${meet.type}"/>"
+						            data-title="<c:out value="${meet.title}"/>"
+						            data-current="<c:out value="${meet.currentMembers}"/>"
+						            data-max="<c:out value="${meet.maxMembers}"/>"
+						            data-time="<c:out value="${meet.startTime}"/>"
+						            data-item="<c:out value="${meet.item}"/>"
+						            data-location="<c:out value="${meet.location}"/>"
+						            data-desc="<c:out value="${meet.description}"/>">
+						            
+						            <div class="card-img ${bgClass}">
+						                <span class="status-badge ${meet.status == '마감임박' ? 'status-urgent' : ''}">${meet.status}</span>
+						                <i class="fa-solid ${iconClass}"></i>
+						            </div>
+						            
+						            <div class="card-content">
+						                <div class="card-title">[${meet.type}] ${meet.title}</div>
+						                <div class="card-info">
+						                    <span><i class="fa-solid fa-location-dot"></i> ${meet.location}</span>
+						                    <span><i class="fa-regular fa-clock"></i> ${meet.startTime}</span>
+						                </div>
+						                <div class="card-footer">
+						                    <span><i class="fa-solid fa-box-open"></i> ${meet.item}</span>
+						                    <span class="people-count">${meet.currentMembers} / ${meet.maxMembers}명</span>
+						                </div>
+						            </div>
+						        </div>
+						    </c:forEach>
+						</div>
                     </div>
             </div>
 
@@ -779,79 +768,76 @@
                                 class="fa-solid fa-xmark"></i></button>
                     </div>
 
-                    <form id="createForm" onsubmit="submitCreate(event)">
-                        <div class="form-group">
-                            <label>카테고리</label>
-                            <select required>
-                                <option value="">선택해주세요</option>
-                                <option value="식사">식사</option>
-                                <option value="공부">공부</option>
-                                <option value="게임">게임</option>
-                                <option value="운동">운동</option>
-                                <option value="택시">택시</option>
-                                <option value="기타">기타</option>
-                            </select>
-                        </div>
+					<form id="createForm" action="${pageContext.request.contextPath}/meet/create" method="post" onsubmit="return submitCreate(event)">
+					    <!-- 날짜/시간을 합쳐 서버로 넘길 Hidden Input -->
+					    <input type="hidden" id="combinedStartTime" name="startTime">
+					    
+					    <div class="form-group">
+					        <label>카테고리</label>
+					        <select name="type" required>
+					            <option value="">선택해주세요</option>
+					            <option value="식사">식사</option>
+					            <option value="공부">공부</option>
+					            <option value="게임">게임</option>
+					            <option value="운동">운동</option>
+					            <option value="택시">택시</option>
+					            <option value="기타">기타</option>
+					        </select>
+					    </div>
 
-                        <div class="form-group">
-                            <label>모임 제목</label>
-                            <input type="text" placeholder="예: 정문 앞 마라탕 같이 드실 분!" required>
-                        </div>
+					    <div class="form-group">
+					        <label>모임 제목</label>
+					        <input type="text" name="title" placeholder="예: 정문 앞 마라탕 같이 드실 분!" required>
+					    </div>
 
-                        <!-- 🌟 날짜 및 시간 입력 (Date & Time Picker) 🌟 -->
-                        <div
-                            style="display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 15px;">
-                            <div class="form-group">
-                                <label>모집 인원 (본인 포함)</label>
-                                <input type="number" min="2" max="20" placeholder="예: 4" required>
-                            </div>
-                            <div class="form-group">
-                                <label>모임 날짜</label>
-                                <input type="date" id="meetingDate" required>
-                            </div>
-                            <div class="form-group">
-                                <label>시작 시간</label>
-                                <input type="time" id="meetingTime" required>
-                            </div>
-                        </div>
+					    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 15px;">
+					        <div class="form-group">
+					            <label>모집 인원 (본인 포함)</label>
+					            <input type="number" name="maxMembers" max="20" placeholder="예: 4" required>
+					        </div>
+					        <div class="form-group">
+					            <label>모임 날짜</label>
+					            <input type="date" id="meetingDate" required>
+					        </div>
+					        <div class="form-group">
+					            <label>시작 시간</label>
+					            <input type="time" id="meetingTime" required>
+					        </div>
+					    </div>
 
-                        <!-- 🌟 카카오맵 장소 검색 영역 🌟 -->
-                        <div class="form-group">
-                            <label>장소 지정 (지도)</label>
-                            <div class="map-search-wrap">
-                                <input type="text" id="keyword" placeholder="장소를 검색하세요 (학교 반경 3km 내)">
-                                <button type="button" onclick="searchPlaces()">검색</button>
-                            </div>
+					    <div class="form-group">
+					        <label>장소 지정 (지도)</label>
+					        <div class="map-search-wrap">
+					            <input type="text" id="keyword" placeholder="장소를 검색하세요 (학교 반경 3km 내)">
+					            <button type="button" onclick="searchPlaces()">검색</button>
+					        </div>
+					        <div id="placesList" class="search-results"></div>
+					        <div class="map-container">
+					            <div id="modalMap"></div>
+					        </div>
+					        <div id="selectedLocInfo" class="selected-loc-info">
+					            선택된 장소: <span id="placeNameDisplay">-</span><br>
+					            지번: <span id="placeAddressDisplay">-</span>
+					        </div>
 
-                            <div id="placesList" class="search-results"></div>
+					        <!-- 지도에서 선택한 정보를 DTO로 넘기기 위한 필드 (name 속성 추가) -->
+					        <input type="hidden" id="placeName" name="location" required>
+					        <input type="hidden" id="placeAddress">
+					        <input type="hidden" id="placeLat" name="lat" required>
+					        <input type="hidden" id="placeLng" name="lng" required>
+					    </div>
 
-                            <div class="map-container">
-                                <div id="modalMap"></div>
-                            </div>
+					    <div class="form-group">
+					        <label>준비물</label>
+					        <input type="text" name="item" placeholder="예: 식비 (더치페이)" required>
+					    </div>
+					    <div class="form-group">
+					        <label>상세 내용</label>
+					        <textarea name="description" placeholder="모임에 대한 자세한 설명을 적어주세요." required></textarea>
+					    </div>
 
-                            <div id="selectedLocInfo" class="selected-loc-info">
-                                선택된 장소: <span id="placeNameDisplay">-</span><br>
-                                지번: <span id="placeAddressDisplay">-</span>
-                            </div>
-
-                            <input type="hidden" id="placeName" required>
-                            <input type="hidden" id="placeAddress">
-                            <input type="hidden" id="placeLat" required>
-                            <input type="hidden" id="placeLng" required>
-                        </div>
-
-                        <div class="form-group">
-                            <label>준비물</label>
-                            <input type="text" placeholder="예: 식비 (더치페이)">
-                        </div>
-                        <div class="form-group">
-                            <label>상세 내용</label>
-                            <textarea placeholder="모임에 대한 자세한 설명을 적어주세요." required></textarea>
-                        </div>
-
-                        <button type="submit" class="btn-primary" style="width: 100%; justify-content: center;">모임
-                            등록하기</button>
-                    </form>
+					    <button type="submit" class="btn-primary" style="width: 100%; justify-content: center;">모임 등록하기</button>
+					</form>
                 </div>
             </div>
 
@@ -960,6 +946,22 @@
                 }
 
                 function closeJoinModal() { document.getElementById('joinModal').classList.remove('show'); }
+
+                // 모임 카드 클릭 시 data-* 속성값을 읽어 상세 모달 오픈 (EL 값을 onclick에 직접 넣지 않기 위한 안전한 방식)
+                document.querySelectorAll('.meeting-card').forEach(function (card) {
+                    card.addEventListener('click', function () {
+                        openJoinModal(
+                            card.dataset.type,
+                            card.dataset.title,
+                            card.dataset.current,
+                            card.dataset.max,
+                            card.dataset.time,
+                            card.dataset.item,
+                            card.dataset.location,
+                            card.dataset.desc
+                        );
+                    });
+                });
 
                 function toggleJoin() {
                     const joinBtn = document.getElementById('btnJoinAction');
@@ -1076,21 +1078,20 @@
                     document.getElementById('placeLng').value = lng;
                 }
 
-                function submitCreate(e) {
-                    e.preventDefault();
+				function submitCreate(e) {
+				    const mDate = document.getElementById('meetingDate').value;
+				    const mTime = document.getElementById('meetingTime').value;
 
-                    // 날짜 및 시간 값도 함께 전송 가능함을 확인
-                    const mDate = document.getElementById('meetingDate').value;
-                    const mTime = document.getElementById('meetingTime').value;
+				    if (!document.getElementById('placeLat').value || !document.getElementById('placeLng').value || !document.getElementById('placeName').value) {
+				        alert("지도에서 모임 장소를 검색하거나 클릭하여 지정해주세요.");
+				        e.preventDefault();
+				        return false;
+				    }
 
-                    if (!document.getElementById('placeLat').value) {
-                        alert("지도에서 모임 장소를 검색하거나 클릭하여 지정해주세요.");
-                        return;
-                    }
-
-                    alert(`모임이 성공적으로 생성되었습니다!\n- 일정: \${mDate} \${mTime}\n- 저장된 좌표: \${document.getElementById('placeLat').value}`);
-                    closeCreateModal();
-                }
+				    document.getElementById('combinedStartTime').value = mDate + "T" + mTime;
+				    
+				    return true; 
+				}
             </script>
     </body>
 

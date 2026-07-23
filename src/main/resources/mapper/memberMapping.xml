@@ -2,12 +2,12 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
-<mapper namespace="kr.ac.tukorea.springProject.repository.memberMapper">
-	<select
-		id="loginCheck"
-		resultType="_int"
-		parameterType="kr.ac.tukorea.springProject.dto.memberDTO"
-	>
+<mapper namespace="kr.ac.tukorea.springProject.repository.MemberMapper">
+<select
+    id="loginCheck"
+    resultType="_int"
+    parameterType="kr.ac.tukorea.springProject.dto.UserDTO"
+>
 		SELECT
 			count(*) as cnt
 		FROM tbl_member
@@ -19,7 +19,7 @@
 	
 	<select
 		id="memberList"
-		resultType="kr.ac.tukorea.springProject.dto.memberDTO"
+		resultType="kr.ac.tukorea.springProject.dto.UserDTO"
 	>
 		SELECT * FROM tbl_member;	
 	</select>

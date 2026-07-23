@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.ac.tukorea.springProject.repository.MeetMapper">
+
+    <!-- 모임 목록 조회 -->
+    <select id="selectMeetList" resultType="kr.ac.tukorea.springProject.dto.MeetDTO">
+        SELECT 
+            id, 
+            meet_type AS type, 
+            title, 
+            current_members AS currentMembers, 
+            max_members AS maxMembers, 
+            start_time AS startTime, 
+            end_time AS endTime, 
+            item, 
+            created, 
+            meet_status AS status,
+            location, 
+            description, 
+            lat, 
+            lng
+        FROM meet_tbl
+        ORDER BY created DESC
+    </select>
+
+    <!-- 새 모임 등록 -->
+    <insert id="insertMeet" parameterType="kr.ac.tukorea.springProject.dto.MeetDTO">
+        INSERT INTO meet_tbl 
+            (meet_type, title, current_members, max_members, start_time, item, created, meet_status, location, description, lat, lng)
+        VALUES 
+            (#{type}, #{title}, 1, #{maxMembers}, #{startTime}, #{item}, NOW(), '모집중', #{location}, #{description}, #{lat}, #{lng})
+    </insert>
+
+</mapper>
