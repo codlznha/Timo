@@ -1,8 +1,9 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <%
-    // 현재 요청된 페이지의 파일명 추출 (예: /club_main.jsp -> club_main.jsp)
+    // 현재 요청된 URI 추출 (예: /admin/add_club_check)
     String uri = request.getRequestURI();
-    String currentPage = uri.substring(uri.lastIndexOf("/") + 1);
+    String contextPath = request.getContextPath();
+    String currentPage = uri.substring(contextPath.length());
 %>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 <style>
@@ -130,10 +131,8 @@
     </div>
     <nav class="sidebar-menu">
         <div class="menu-title">MAIN MENU</div>
-		<a href="${pageContext.request.contextPath}/club/addClubCheck"
-		   class="menu-item <%= currentPage.equals("add_club_check.jsp") ? "active" : "" %>"><i class="fa-solid fa-shield-halved"></i> 동아리 승인</a>
-		   <a href="${pageContext.request.contextPath}/club/noticeWrite"
-		      class="menu-item <%= currentPage.equals("notice_write.jsp") ? "active" : "" %>"><i class="fa-solid fa-pen-to-square"></i> 공지 작성</a>
+        <a href="${pageContext.request.contextPath}/admin/add_club_check" class="menu-item <%= currentPage.equals("/admin/add_club_check") ? "active" : "" %>"><i class="fa-solid fa-shield-halved"></i> 동아리 승인</a>
+        <a href="${pageContext.request.contextPath}/admin/notice_write" class="menu-item <%= currentPage.equals("/admin/notice_write") ? "active" : "" %>"><i class="fa-solid fa-pen-to-square"></i> 공지 작성</a>
     </nav>
 </aside>
 

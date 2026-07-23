@@ -6,8 +6,17 @@ public class NoticeDTO {
     private String adminId;
     private String title;
     private String content;
+    private String type;
 
-    public int getId() {
+    public String getType() {
+		return type;
+	}
+
+	public void setType(String type) {
+		this.type = type;
+	}
+
+	public int getId() {
         return id;
     }
 

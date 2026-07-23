@@ -223,39 +223,6 @@
             background-color: #004588;
         }
 
-        /* 등록 전 미리보기 (main.jsp의 notice-list 스타일 재사용) */
-        .notice-list {
-            list-style: none;
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-        }
-
-        .notice-list li {
-            display: flex;
-            justify-content: space-between;
-            font-size: 0.95rem;
-            padding: 10px 0;
-            border-bottom: 1px solid var(--border-color);
-        }
-
-        .notice-list li:last-child {
-            border-bottom: none;
-        }
-
-        .notice-label {
-            color: #d32f2f;
-            font-weight: bold;
-            margin-right: 10px;
-        }
-
-        .preview-empty {
-            font-size: 0.9rem;
-            color: var(--text-gray);
-            text-align: center;
-            padding: 20px 0;
-        }
-
         @media (max-width: 768px) {
             .main-wrapper {
                 padding-bottom: 70px;
@@ -301,7 +268,7 @@
                 <div class="card">
                     <div class="card-title">
                         <span><i class="fa-solid fa-bullhorn" style="color:#d32f2f;"></i> 새 공지사항 작성</span>
-                        <a href="/main"><i class="fa-solid fa-xmark"></i> 취소하고 홈으로</a>
+                        <a href="${pageContext.request.contextPath}/main"><i class="fa-solid fa-xmark"></i> 취소하고 홈으로</a>
                     </div>
 
                     <div class="write-notice-info">
@@ -329,33 +296,19 @@
                         <div class="form-group">
                             <label for="noticeContent">내용</label>
                             <textarea id="noticeContent" placeholder="공지사항 내용을 입력하세요" maxlength="1000"
-                                oninput="updateCharCount(); updatePreview();" required></textarea>
+                                oninput="updateCharCount();" required></textarea>
                             <div class="char-count"><span id="charCount">0</span> / 1000</div>
                         </div>
 
-                        <div class="form-group">
-                            <label class="checkbox-line">
-                                <input type="checkbox" id="noticePin">
-                                상단에 고정하기
-                            </label>
-                        </div>
+                        
 
                         <div class="form-actions">
                             <button type="button" class="btn btn-cancel"
-                                onclick="location.href='/main'">취소</button>
+                                onclick="location.href='${pageContext.request.contextPath}/main'">취소</button>
                             <button type="submit" class="btn btn-submit"><i class="fa-solid fa-check"></i>
                                 등록하기</button>
                         </div>
                     </form>
-                </div>
-
-                <div class="card">
-                    <div class="card-title">
-                        <span><i class="fa-regular fa-eye"></i> 미리보기</span>
-                    </div>
-                    <ul class="notice-list" id="previewList">
-                        <li class="preview-empty" id="previewEmpty">제목과 내용을 입력하면 실제 목록에 표시될 모습을 미리 볼 수 있습니다.</li>
-                    </ul>
                 </div>
             </div>
         </div>
@@ -370,34 +323,6 @@
                 document.getElementById('charCount').textContent = content.length;
             }
 
-            function todayLabel() {
-                const now = new Date();
-                const mm = String(now.getMonth() + 1).padStart(2, '0');
-                const dd = String(now.getDate()).padStart(2, '0');
-                return mm + '.' + dd;
-            }
-
-            // 제목/분류 입력에 따라 실제 공지사항 목록과 동일한 형태로 미리보기 렌더링
-            function updatePreview() {
-                const title = document.getElementById('noticeTitle').value.trim();
-                const label = document.getElementById('noticeLabel').value;
-                const previewList = document.getElementById('previewList');
-
-                if (title === '') {
-                    previewList.innerHTML = '<li class="preview-empty" id="previewEmpty">제목과 내용을 입력하면 실제 목록에 표시될 모습을 미리 볼 수 있습니다.</li>';
-                    return;
-                }
-
-                previewList.innerHTML =
-                    '<li>' +
-                    '<span><span class="notice-label">[' + label + ']</span>' + title + '</span>' +
-                    '<span style="color: var(--text-gray); font-size: 0.8rem;">' + todayLabel() + '</span>' +
-                    '</li>';
-            }
-
-            document.getElementById('noticeTitle').addEventListener('input', updatePreview);
-            document.getElementById('noticeLabel').addEventListener('change', updatePreview);
-
             // 공지사항 등록 (데모: 실제로는 서버로 POST 후 main.jsp의 공지사항 목록에 반영되어야 함)
             function submitNotice(event) {
                 event.preventDefault();
@@ -410,20 +335,36 @@
                 const label = document.getElementById('noticeLabel').value;
                 const title = document.getElementById('noticeTitle').value.trim();
                 const content = document.getElementById('noticeContent').value.trim();
-                const pinned = document.getElementById('noticePin').checked;
 
                 if (title === '' || content === '') {
                     alert('제목과 내용을 모두 입력해주세요.');
                     return;
                 }
 
-                if (!confirm('[' + label + '] ' + title + '\n\n공지사항을 등록하시겠습니까?' + (pinned ? '\n(상단 고정)' : ''))) {
+                if (!confirm('[' + label + '] ' + title + '\n\n공지사항을 등록하시겠습니까?')) {
                     return;
                 }
 
-                // TODO: 서버 연동 시 이 부분에서 fetch/axios 등으로 컨트롤러(예: noticeCreate)에 POST 요청
-                alert('공지사항이 등록되었습니다.');
-                location.href = '/main';
+                const noticeData = {
+                    title: title,
+                    content: content,
+                    type: label
+                };
+
+                fetch('${pageContext.request.contextPath}/notice/write', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(noticeData)
+                })
+                .then(function (res) {
+                    if (!res.ok) throw new Error('등록 실패');
+                    alert('공지사항이 등록되었습니다.');
+                    location.href = '${pageContext.request.contextPath}/main';
+                })
+                .catch(function (err) {
+                    console.error(err);
+                    alert('등록 중 오류가 발생했습니다. 다시 시도해주세요.');
+                });
             }
         </script>
 </body>
